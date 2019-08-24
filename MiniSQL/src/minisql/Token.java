@@ -3,19 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mini.sql;
+package minisql;
 
 /**
  *
  * @author Admin
  */
-public class MiniSQL {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
+public enum Token {
+    Palabra_Reservada, Identificador, Bit, Int, Float, FloatExponencial, String, Operador, ERROR;
 }
