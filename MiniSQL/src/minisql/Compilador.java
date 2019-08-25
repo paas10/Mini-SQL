@@ -5,8 +5,19 @@
  */
 package minisql;
 
+import java.awt.List;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -34,7 +45,7 @@ public class Compilador extends javax.swing.JFrame {
         lblPath = new javax.swing.JLabel();
         btnPath = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jtaResultado = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,10 +61,10 @@ public class Compilador extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(1);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jtaResultado.setColumns(1);
+        jtaResultado.setLineWrap(true);
+        jtaResultado.setRows(5);
+        jScrollPane1.setViewportView(jtaResultado);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -62,20 +73,19 @@ public class Compilador extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(112, 112, 112)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(btnPath)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblPath)))
-                        .addGap(0, 119, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(btnPath)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblPath)
+                        .addGap(0, 410, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(195, 195, 195)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,6 +110,10 @@ public class Compilador extends javax.swing.JFrame {
     private void btnPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPathActionPerformed
         JFileChooser Explorador = new JFileChooser();
         Explorador.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        
+        FileNameExtensionFilter Filtro = new FileNameExtensionFilter("Archivos SQL","sql");
+        Explorador.setFileFilter(Filtro);
+        
         Explorador.showOpenDialog(this);
         File ArchivoSQL = Explorador.getSelectedFile();
         
@@ -108,6 +122,47 @@ public class Compilador extends javax.swing.JFrame {
         else
             lblPath.setText(ArchivoSQL.getPath());
         
+        try {
+            Reader reader = new BufferedReader(new FileReader(ArchivoSQL.getPath()));
+            Lexer lexer = new Lexer(reader);
+            
+            List Lista = new List();
+            //Lista.add("Juana");
+            
+            
+            
+            Token token;
+            
+            do
+            {
+                token = lexer.yylex();
+                
+                switch (token)
+                {
+                    case ERROR:
+                        jtaResultado.append("Error:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        Lista.add("Error:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        break;
+                    
+                    case Palabra_Reservada:
+                        jtaResultado.append("Token:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        Lista.add("Token:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        break;
+                        
+                    default:
+                        jtaResultado.append("Token:\t" + token + ":\t\t" + lexer.lexeme + "\n");
+                        Lista.add("Token:\t" + token + ":\t\t" + lexer.lexeme + "\n");
+                        break;
+                }
+            
+            }while(token != null);
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_btnPathActionPerformed
 
@@ -150,7 +205,7 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JButton btnPath;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jtaResultado;
     private javax.swing.JLabel lblPath;
     // End of variables declaration//GEN-END:variables
 }
