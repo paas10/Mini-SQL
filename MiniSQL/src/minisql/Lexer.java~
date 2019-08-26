@@ -1145,7 +1145,6 @@ public int line;
 public int column;
 
 
-
   /**
    * Creates a new scanner
    *
@@ -1394,6 +1393,62 @@ public int column;
     while (true) {
       zzMarkedPosL = zzMarkedPos;
 
+      boolean zzR = false;
+      int zzCh;
+      int zzCharCount;
+      for (zzCurrentPosL = zzStartRead  ;
+           zzCurrentPosL < zzMarkedPosL ;
+           zzCurrentPosL += zzCharCount ) {
+        zzCh = Character.codePointAt(zzBufferL, zzCurrentPosL, zzMarkedPosL);
+        zzCharCount = Character.charCount(zzCh);
+        switch (zzCh) {
+        case '\u000B':  // fall through
+        case '\u000C':  // fall through
+        case '\u0085':  // fall through
+        case '\u2028':  // fall through
+        case '\u2029':
+          yyline++;
+          yycolumn = 0;
+          zzR = false;
+          break;
+        case '\r':
+          yyline++;
+          yycolumn = 0;
+          zzR = true;
+          break;
+        case '\n':
+          if (zzR)
+            zzR = false;
+          else {
+            yyline++;
+            yycolumn = 0;
+          }
+          break;
+        default:
+          zzR = false;
+          yycolumn += zzCharCount;
+        }
+      }
+
+      if (zzR) {
+        // peek one character ahead if it is \n (if we have counted one line too much)
+        boolean zzPeek;
+        if (zzMarkedPosL < zzEndReadL)
+          zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        else if (zzAtEOF)
+          zzPeek = false;
+        else {
+          boolean eof = zzRefill();
+          zzEndReadL = zzEndRead;
+          zzMarkedPosL = zzMarkedPos;
+          zzBufferL = zzBuffer;
+          if (eof) 
+            zzPeek = false;
+          else 
+            zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        }
+        if (zzPeek) yyline--;
+      }
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
@@ -1461,22 +1516,22 @@ public int column;
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { lexeme=yytext(); line=yyline; column=yycolumn; return ERROR;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return ERROR;
             } 
             // fall through
           case 11: break;
           case 2: 
-            { lexeme=yytext(); line=yyline; return Identificador;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Identificador;
             } 
             // fall through
           case 12: break;
           case 3: 
-            { lexeme=yytext(); line=yyline; return Int;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Int;
             } 
             // fall through
           case 13: break;
           case 4: 
-            { lexeme=yytext(); line=yyline; return Operador;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Operador;
             } 
             // fall through
           case 14: break;
@@ -1486,27 +1541,27 @@ public int column;
             // fall through
           case 15: break;
           case 6: 
-            { lexeme=yytext(); line=yyline; return Bit;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Bit;
             } 
             // fall through
           case 16: break;
           case 7: 
-            { lexeme=yytext(); line=yyline; return Float;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Float;
             } 
             // fall through
           case 17: break;
           case 8: 
-            { lexeme=yytext(); line=yyline; return Palabra_Reservada;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return Palabra_Reservada;
             } 
             // fall through
           case 18: break;
           case 9: 
-            { lexeme=yytext(); line=yyline; return String;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return String;
             } 
             // fall through
           case 19: break;
           case 10: 
-            { lexeme=yytext(); line=yyline; return FloatExponencial;
+            { line=yyline; column=yycolumn; lexeme=yytext(); return FloatExponencial;
             } 
             // fall through
           case 20: break;

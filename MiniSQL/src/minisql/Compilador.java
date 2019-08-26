@@ -5,12 +5,15 @@
  */
 package minisql;
 
+import java.awt.Dimension;
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -48,6 +51,8 @@ public class Compilador extends javax.swing.JFrame {
         jtaResultado = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 204, 255));
+        setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Compilador MiniSQL");
@@ -77,13 +82,13 @@ public class Compilador extends javax.swing.JFrame {
                         .addComponent(btnPath)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblPath)
-                        .addGap(0, 410, Short.MAX_VALUE))
+                        .addGap(0, 617, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(195, 195, 195)
+                .addGap(306, 306, 306)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -97,7 +102,7 @@ public class Compilador extends javax.swing.JFrame {
                     .addComponent(btnPath)
                     .addComponent(lblPath))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -116,7 +121,14 @@ public class Compilador extends javax.swing.JFrame {
         
         Explorador.showOpenDialog(this);
         File ArchivoSQL = Explorador.getSelectedFile();
+
+        String path = ArchivoSQL.getAbsolutePath();
+        String Path = path.substring(0, path.length() - 4);
         
+        String PathOut = Path + ".out";
+        
+        //String path_out = path[0] + ".out";
+
         if (ArchivoSQL == null) 
             lblPath.setText("Debes seleccionar un archivo SQL válido");
         else
@@ -126,43 +138,102 @@ public class Compilador extends javax.swing.JFrame {
             Reader reader = new BufferedReader(new FileReader(ArchivoSQL.getPath()));
             Lexer lexer = new Lexer(reader);
             
-            List Lista = new List();
-            //Lista.add("Juana");
-            
-            
+            List Lista = new List();            
             
             Token token;
             
-            do
+            token = lexer.yylex();
+            
+            while (token != null)
             {
-                token = lexer.yylex();
-                
                 switch (token)
                 {
                     case ERROR:
-                        jtaResultado.append("Error:\t" + token + ":\t" + lexer.lexeme + "\n");
-                        Lista.add("Error:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: " + token + ":\t\t" + lexer.lexeme + 
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: " + token + ":\t\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         break;
                     
                     case Palabra_Reservada:
-                        jtaResultado.append("Token:\t" + token + ":\t" + lexer.lexeme + "\n");
-                        Lista.add("Token:\t" + token + ":\t" + lexer.lexeme + "\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        break;
+                        
+                    case FloatExponencial:
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme + 
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        break;
+                        
+                    case Identificador:
+                        // Si el identificador tiene mas de 31 caracteres lanza error.
+                        if (lexer.lexeme.length() > 31)
+                        {
+                            char[] cidentificador = lexer.lexeme.toCharArray();
+                            String identificador = "";
+                            
+                            for(int i = 0; i < 31; i++)
+                                identificador += Character.toString(cidentificador[i]);
+                            
+                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: " + "Identificador.lenght" + ":\t" + identificador +
+                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) +  ". Error: " + "Identificador.lenght" + ":\t" + identificador +
+                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        }
+                        else
+                        {
+                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
+                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
+                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        }
                         break;
                         
                     default:
-                        jtaResultado.append("Token:\t" + token + ":\t\t" + lexer.lexeme + "\n");
-                        Lista.add("Token:\t" + token + ":\t\t" + lexer.lexeme + "\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme + 
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         break;
                 }
             
-            }while(token != null);
+                token = lexer.yylex();
+            }
             
+            jtaResultado.append("FIN DE LECTURA");
+            Lista.add("FIN DE LECTURA");
+            
+            // Escritor del archivo de salida.
+            File ArchivoOut = new File(PathOut);
+            FileWriter writer = new FileWriter(ArchivoOut);
+            PrintWriter pw = new PrintWriter(ArchivoOut);
+            
+            pw.write(Lista.getItem(0));
+            
+            int cont = 1;
+            
+            while(!Lista.getItem(cont).equals("FIN DE LECTURA"))
+            {
+                pw.append(Lista.getItem(cont));
+                cont++;
+            }
+            
+            pw.append("FIN DE LECTURA");
+            
+            pw.close();
+            writer.close();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
         
     }//GEN-LAST:event_btnPathActionPerformed
 
