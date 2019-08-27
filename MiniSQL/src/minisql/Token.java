@@ -10,5 +10,5 @@ package minisql;
  * @author Admin
  */
 public enum Token {
-    Palabra_Reservada, Identificador, Bit, Int, Float, FloatExponencial, String, Operador, ERROR;
+    Palabra_Reservada, Identificador, Bit, Int, Float, FloatExponencial, String, Error_String, Operador, Error_Comentario, ERROR;
 }

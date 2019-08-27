@@ -127,8 +127,12 @@ public class Compilador extends javax.swing.JFrame {
         
         String PathOut = Path + ".out";
         
-        //String path_out = path[0] + ".out";
+        AnalizarTokens(ArchivoSQL, PathOut);
+    }//GEN-LAST:event_btnPathActionPerformed
 
+    // Método que escribe el archivo .out y escribe en pantalla el analisis del archivo.
+    private void AnalizarTokens(File ArchivoSQL, String PathOut)
+    {
         if (ArchivoSQL == null) 
             lblPath.setText("Debes seleccionar un archivo SQL válido");
         else
@@ -149,16 +153,16 @@ public class Compilador extends javax.swing.JFrame {
                 switch (token)
                 {
                     case ERROR:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: " + token + ":\t\t" + lexer.lexeme + 
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: " + token + ":\t\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Caracter no Reconocido:\t" + lexer.lexeme + 
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: Caracter no Reconocido:\t" + lexer.lexeme +
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         break;
                     
                     case Palabra_Reservada:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: Palabra Reservada :\t" + lexer.lexeme +
                                 "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: Palabra Reservada :\t" + lexer.lexeme +
                                 "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         break;
                         
@@ -191,6 +195,20 @@ public class Compilador extends javax.swing.JFrame {
                             Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
                                     "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         }
+                        break;
+                        
+                    case Error_String:
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: String sin Cierre :\t\t" + lexer.lexeme + 
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: String sin Cierre :\t\t" + lexer.lexeme +
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        break;
+                        
+                    case Error_Comentario:
+                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme + 
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme +
+                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         break;
                         
                     default:
@@ -233,10 +251,8 @@ public class Compilador extends javax.swing.JFrame {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
-        
-    }//GEN-LAST:event_btnPathActionPerformed
-
+    }
+    
     /**
      * @param args the command line arguments
      */
