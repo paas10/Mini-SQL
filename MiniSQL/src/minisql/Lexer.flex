@@ -18,7 +18,7 @@ public int column;
 %%
 {WHITE} {/*Ignore*/}
 ("--")([^\n])* {/*Ignore*/}
-("/*")([^\*/])*("*/") {/*Ignore*/}
+(("/*")([^*])+~("*/")) {/*Ignore*/}
 ("/*")([^\n])* {line=yyline; column=yycolumn; lexeme=yytext(); return Error_Comentario;}
 (("'")([^\n'])*("'")) {line=yyline; column=yycolumn; lexeme=yytext(); return String;}
 (("'")([^\n'])*) {line=yyline; column=yycolumn; lexeme=yytext(); return Error_String;}

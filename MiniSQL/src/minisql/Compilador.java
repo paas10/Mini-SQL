@@ -205,10 +205,16 @@ public class Compilador extends javax.swing.JFrame {
                         break;
                         
                     case Error_Comentario:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme + 
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme +
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        
+                        char[] letras = lexer.lexeme.trim().toCharArray();
+                        
+                        if (!(letras[0] == '/' && letras[1] == '*' && letras[letras.length - 2] == '*' && letras[letras.length - 1] == '/'))
+                        {
+                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme + 
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme +
+                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        }   
                         break;
                         
                     default:
