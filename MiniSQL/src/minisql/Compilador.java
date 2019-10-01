@@ -5,8 +5,12 @@
  */
 package minisql;
 
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,13 +19,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.LayoutStyle;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 /**
  *
  * @author Admin
@@ -31,7 +43,15 @@ public class Compilador extends javax.swing.JFrame {
     /**
      * Creates new form Compilador
      */
+    LinkedList ColaAnalisis;
+    TokenAnalisis Actual;
+    int Sentencia = 1;
+    boolean ErrorSintactico = false;
+    // Error Sintactico Historico
+    boolean ESH = false;
+
     public Compilador() {
+        ColaAnalisis = new LinkedList();
         initComponents();
     }
 
@@ -49,6 +69,10 @@ public class Compilador extends javax.swing.JFrame {
         btnPath = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtaResultado = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtaResultado1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 255));
@@ -71,26 +95,47 @@ public class Compilador extends javax.swing.JFrame {
         jtaResultado.setRows(5);
         jScrollPane1.setViewportView(jtaResultado);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Análisis Lexico");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Análisis Sintáctico");
+
+        jtaResultado1.setColumns(1);
+        jtaResultado1.setLineWrap(true);
+        jtaResultado1.setRows(5);
+        jScrollPane2.setViewportView(jtaResultado1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnPath)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblPath)
-                        .addGap(0, 617, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(306, 306, 306)
+                                .addComponent(jLabel1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 307, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnPath)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblPath)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane2))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(306, 306, 306)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,9 +146,15 @@ public class Compilador extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPath)
                     .addComponent(lblPath))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(2, 2, 2)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         lblPath.getAccessibleContext().setAccessibleName("lblPath");
@@ -115,150 +166,2310 @@ public class Compilador extends javax.swing.JFrame {
     private void btnPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPathActionPerformed
         JFileChooser Explorador = new JFileChooser();
         Explorador.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        
-        FileNameExtensionFilter Filtro = new FileNameExtensionFilter("Archivos SQL","sql");
+
+        FileNameExtensionFilter Filtro = new FileNameExtensionFilter("Archivos SQL", "sql");
         Explorador.setFileFilter(Filtro);
-        
+
         Explorador.showOpenDialog(this);
         File ArchivoSQL = Explorador.getSelectedFile();
 
         String path = ArchivoSQL.getAbsolutePath();
         String Path = path.substring(0, path.length() - 4);
-        
+
         String PathOut = Path + ".out";
-        
+
         AnalizarTokens(ArchivoSQL, PathOut);
     }//GEN-LAST:event_btnPathActionPerformed
 
     // Método que escribe el archivo .out y escribe en pantalla el analisis del archivo.
-    private void AnalizarTokens(File ArchivoSQL, String PathOut)
-    {
-        if (ArchivoSQL == null) 
+    private void AnalizarTokens(File ArchivoSQL, String PathOut) {
+        if (ArchivoSQL == null) {
             lblPath.setText("Debes seleccionar un archivo SQL válido");
-        else
+        } else {
             lblPath.setText(ArchivoSQL.getPath());
-        
+        }
+
         try {
             Reader reader = new BufferedReader(new FileReader(ArchivoSQL.getPath()));
             Lexer lexer = new Lexer(reader);
-            
-            List Lista = new List();            
-            
+
+            List Lista = new List();
+
             Token token;
-            
             token = lexer.yylex();
             
-            while (token != null)
-            {
-                switch (token)
-                {
+            // Variables para analizar si se debe analizar la expresion Sintacticamente
+            boolean flagError = false;
+            LinkedList ColaTemp = new LinkedList();
+            
+
+            while (token != null) {
+                TokenAnalisis tok;
+
+                switch (token) {
                     case ERROR:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Caracter no Reconocido:\t" + lexer.lexeme + 
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: Caracter no Reconocido:\t" + lexer.lexeme +
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: Caracter no Reconocido:\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Error: Caracter no Reconocido:\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        flagError = true;
                         break;
-                    
+
                     case Palabra_Reservada:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: Palabra Reservada :\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: Palabra Reservada :\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: Palabra Reservada :\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Token: Palabra Reservada :\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                        ColaTemp.offer(tok);
                         break;
-                        
+
                     case FloatExponencial:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme + 
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                        ColaTemp.offer(tok);
                         break;
-                        
+
                     case Identificador:
                         // Si el identificador tiene mas de 31 caracteres lanza error.
-                        if (lexer.lexeme.length() > 31)
-                        {
+                        if (lexer.lexeme.length() > 31) {
                             char[] cidentificador = lexer.lexeme.toCharArray();
                             String identificador = "";
-                            
-                            for(int i = 0; i < 31; i++)
+
+                            for (int i = 0; i < 31; i++) {
                                 identificador += Character.toString(cidentificador[i]);
-                            
-                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: " + "Identificador.lenght" + ":\t" + identificador +
-                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                            Lista.add("Linea " + (lexer.line + 1) +  ". Error: " + "Identificador.lenght" + ":\t" + identificador +
-                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        }
-                        else
-                        {
-                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
-                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                            Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
-                                    "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            }
+
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: " + "Identificador.lenght" + ":\t" + identificador
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Error: " + "Identificador.lenght" + ":\t" + identificador
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+
+                            flagError = true;
+
+                        } else {
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                            ColaTemp.offer(tok);
                         }
                         break;
-                        
+
                     case Error_String:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: String sin Cierre :\t\t" + lexer.lexeme + 
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Error: String sin Cierre :\t\t" + lexer.lexeme +
-                            "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        break;
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: String sin Cierre :\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Error: String sin Cierre :\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
                         
+                        flagError = true;
+                        break;
+
                     case Error_Comentario:
-                        
+
                         char[] letras = lexer.lexeme.trim().toCharArray();
-                        
-                        if (!(letras[0] == '/' && letras[1] == '*' && letras[letras.length - 2] == '*' && letras[letras.length - 1] == '/'))
-                        {
-                            jtaResultado.append("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme + 
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                            Lista.add("Linea " + (lexer.line + 1) +  ". Error: Comentario sin Terminar :\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        }   
+
+                        if (!(letras[0] == '/' && letras[1] == '*' && letras[letras.length - 2] == '*' && letras[letras.length - 1] == '/')) {
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: Comentario sin Terminar :\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Error: Comentario sin Terminar :\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                            flagError = true;
+                        }
                         break;
-                        
+
                     default:
-                        jtaResultado.append("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme + 
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
-                        Lista.add("Linea " + (lexer.line + 1) +  ". Token: " + token + ":\t\t" + lexer.lexeme +
-                                "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (lexer.column + lexer.yylength() - 1) + "}\n");
+
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                        ColaTemp.offer(tok);
                         break;
                 }
-            
+
                 token = lexer.yylex();
+                
+                if (token == Token.Final)
+                {
+                    if (!flagError)
+                    {
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                        ColaTemp.offer(tok);
+
+                        token = lexer.yylex();
+                        if (token == Token.Final)
+                        {
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.column);
+                            ColaTemp.offer(tok);
+                            token = lexer.yylex();
+                        }
+
+                        while(ColaTemp.peek() != null)
+                            ColaAnalisis.offer(ColaTemp.poll());
+                    }
+                    else
+                    {
+                        token = lexer.yylex();
+                        if (token == Token.Final)
+                            token = lexer.yylex();
+                        
+                        while(ColaTemp.peek() != null)
+                            ColaTemp.poll();
+                        
+                        flagError = false;
+                    }
+                }
+
             }
-            
+
             jtaResultado.append("FIN DE LECTURA");
             Lista.add("FIN DE LECTURA");
-            
+
             // Escritor del archivo de salida.
             File ArchivoOut = new File(PathOut);
             FileWriter writer = new FileWriter(ArchivoOut);
             PrintWriter pw = new PrintWriter(ArchivoOut);
-            
+
             pw.write(Lista.getItem(0));
-            
+
             int cont = 1;
-            
-            while(!Lista.getItem(cont).equals("FIN DE LECTURA"))
-            {
+
+            while (!Lista.getItem(cont).equals("FIN DE LECTURA")) {
                 pw.append(Lista.getItem(cont));
                 cont++;
             }
-            
+
             pw.append("FIN DE LECTURA");
-            
+
             pw.close();
             writer.close();
+
+            this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+
+            while (this.ColaAnalisis.peek() != null) {
+                if (Actual.token == Token.InicialA && !ErrorSintactico)
+                {
+                    Inicial();
+                }
+                else if (Actual.token != Token.InicialA && ErrorSintactico)
+                {
+                    // Consumo todos los elementos que no sean Final (; o GO)
+                    while (Actual.token != Token.Final)
+                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    
+                    // Consumo un elemento más para verificar si es otro Final, de lo contrario debería de haber
+                    // comenzado otra sentencia
+                    // Si es otro final, consumo el segundo final para que comience otra sentencia
+                    this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    if (Actual.token == Token.Final)
+                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    
+                    // Debería de ser el inicio de otra sentencia, por lo que se convierte en FALSE la Flag de
+                    // Error sintactico y se manda a analizar nuevamente desde incial.
+                    ErrorSintactico = false;
+                    Inicial();
+                }
+                else if (Actual.token == Token.InicialA && ErrorSintactico)
+                {
+                    // Se asume que hubo un error en la sentencia pasada y que se logró consumir la sentencia completa
+                    // Se procede a analizar la siguiente sentencia, sin embargo se cambia nuevamente la Flag de
+                    // error sintactico a FALSE
+                    ErrorSintactico = false;
+                    Inicial();
+                }
+            }
             
+            if(ESH)
+                jtaResultado1.append("\nANÁLISIS SINTÁCTICO FINALIZADO");
+            else
+                jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    
+    
+    //--------ANALISIS SINTACTICO FASE 2--------
+    // PT = Produccion o Token
+    // Produccion -> True
+    // Token -> False
+    private void Emparejar(String Esperado, boolean PT) {
+        if (PT) {
+            if (this.Actual.produccion.equals(Esperado)) {
+                this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+            } else {
+                RaiseError(Esperado, this.Actual.linea, this.Actual.columna);
+            }
+        } else {
+            String Tkn = this.Actual.token.toString();
+            if (Tkn.equals(Esperado)) {
+                this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+            } else {
+                RaiseError(Esperado, this.Actual.linea, this.Actual.columna);
+            }
+        }
+    }
+
+    private void RaiseError(String Esperado, int linea, int columna) {
+        if (!ErrorSintactico)
+        {
+            ESH = true;
+            
+            if (Esperado.length() > 50)
+                jtaResultado1.append("ERROR: Se esperaba: " + Esperado + "\tEn la linea " + linea + 
+                        " y en la columna " + columna + "\n");
+            else if (Esperado.length() > 10)
+                jtaResultado1.append("ERROR: Se esperaba: " + Esperado + "\t\t\tEn la linea " + linea + 
+                        " y en la columna " + columna + "\n");
+            else
+                jtaResultado1.append("ERROR: Se esperaba: " + Esperado + "\t\t\t\tEn la linea " + linea + 
+                        " y en la columna " + columna + "\n");
+                
+            //JOptionPane.showMessageDialog(null, "Sentencia. " + Sentencia + "\n\nERROR: Se esperaba: " + Esperado + "\n" + "En la linea " + linea + " y en la columna " + columna);
+            ErrorSintactico = true;
+        }    
+    }
+
+    private void Inicial() {
+        if (this.Actual.token == Token.InicialA) {
+
+            InicialA();
+            Final();
+            
+            if (!ErrorSintactico){
+                //JOptionPane.showMessageDialog(null, "Parseo Sentencia " + Sentencia + " Finalizado");
+                Sentencia++;
+            }
+            else{
+                Sentencia++;
+            }
+        } 
+        else {
+            RaiseError("SELECT | INSERT | DELETE | UPDATE | CREATE | ALTER | DROP | TRUNCATE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Final() {
+        if (this.Actual.token == Token.Final) {
+
+            if (this.Actual.produccion.equals(";")) {
+
+                Emparejar(";", true);
+                if (this.Actual.produccion.equals("GO")) {
+                    Emparejar("GO", true);
+                }
+            } else if (this.Actual.produccion.equals("GO")) {
+                Emparejar("GO", true);
+            } else {
+                RaiseError("; | ;GO | GO", this.Actual.linea, this.Actual.columna);
+            }
+        } else {
+            RaiseError("; | ;GO | GO", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    //--------PRODUCCIONES SECUNDARIAS--------
+    private void ID() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            if (this.Actual.token == Token.Identificador) {
+                Emparejar("Identificador", false);
+            } else if (this.Actual.produccion.equals("[")) {
+                Emparejar("[", true);
+                Emparejar("Identificador", false);
+                Emparejar("]", true);
+            }
+        }
+        else
+        {
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Object2() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            ID();
+            Object2A();
+        }
+        else{
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Object2A() {
+        if (this.Actual.produccion.equals(".")) {
+
+            Emparejar(".", true);
+            ID();
+        }
+    }
+
+    private void Object3() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            ID();
+            Object3A();
+        }
+        else{
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Object3A() {
+        if (this.Actual.produccion.equals(".")) {
+
+            Emparejar(".", true);
+            Object2();
+        }
+    }
+
+    private void Object4() {
+        if (this.Actual.token == Token.Identificador) {
+            ID();
+            Object4A();
+        }
+        else{
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Object4A() {
+        if (this.Actual.produccion.equals(".")) {
+
+            Emparejar(".", true);
+            Object3();
+        }
+    }
+
+    private void IFE() {
+        if (this.Actual.token == Token.IF) {
+
+            Emparejar("IF", true);
+            Emparejar("EXISTS", true);
+        }
+    }
+
+    private void Tipo_Dato() {
+        if (this.Actual.token == Token.TIPO || this.Actual.produccion.equals("[")) {
+
+            Tipo_DatoD();
+            Tipo_DatoB();
+        }
+    }
+
+    private void Tipo_DatoD() {
+        if (this.Actual.token == Token.TIPO) {
+
+            Tipo_DatoA();
+        } else if (this.Actual.produccion.equals("[")) {
+
+            Emparejar("[", true);
+            Tipo_DatoA();
+            Emparejar("]", true);
+        }
+    }
+
+    private void Tipo_DatoA() {
+        if (this.Actual.token == Token.TIPO) {
+            Emparejar("TIPO", false);
+        }
+    }
+
+    private void Tipo_DatoB() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            Emparejar("Int", false);
+            Tipo_DatoC();
+            Emparejar(")", true);
+        }
+    }
+
+    private void Tipo_DatoC() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Emparejar("Int", false);
+        }
+    }
+
+    private void Alias() {
+        if (this.Actual.produccion.equals("AS")) {
+
+            Emparejar("AS", true);
+            AliasA();
+
+        } else if (this.Actual.produccion.equals("[") || this.Actual.token == Token.String || this.Actual.token == Token.Identificador) {
+            AliasA();
+        }
+    }
+
+    private void AliasA() {
         
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || this.Actual.token == Token.String)
+        {
+            if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+                ID();
+            } 
+            else if (this.Actual.token == Token.String) {
+                Emparejar("String", false);
+            } 
+        }
+        else {
+            RaiseError("[ | String | Identificador", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Expresion() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@")
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL")
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG")
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX")
+                || this.Actual.produccion.equals("COUNT")) {
+
+            ExpresionB();
+            ExpresionA();
+        } else {
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | ( | NULL | SUM | AVG | MIN | MAX | COUNT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ExpresionA() {
+        if (this.Actual.produccion.equals("+")) {
+
+            Emparejar("+", true);
+            ExpresionB();
+            ExpresionA();
+        } else if (this.Actual.produccion.equals("-")) {
+
+            Emparejar("-", true);
+            ExpresionB();
+            ExpresionA();
+        }
+    }
+
+    private void ExpresionB() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") 
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@") 
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL") 
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG") 
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX") 
+                || this.Actual.produccion.equals("COUNT")) {
+
+            ExpresionD();
+            ExpresionC();
+        } else {
+
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | (", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ExpresionC() {
+        if (this.Actual.produccion.equals("*")) {
+
+            ExpresionD();
+            ExpresionC();
+        } else if (this.Actual.produccion.equals("/")) {
+
+            ExpresionD();
+            ExpresionC();
+        }
+    }
+
+    private void ExpresionD() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") 
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@") 
+                || this.Actual.produccion.equals("NULL") || this.Actual.produccion.equals("SUM") 
+                || this.Actual.produccion.equals("AVG") || this.Actual.produccion.equals("MIN") 
+                || this.Actual.produccion.equals("MAX") || this.Actual.produccion.equals("COUNT")) {
+
+            ExpresionE();
+        } else if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            Expresion();
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | (", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ExpresionE() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            Object4();
+        } else if (this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@")) {
+
+            Constante();
+        } else if (this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG") 
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX") 
+                || this.Actual.produccion.equals("COUNT") || this.Actual.produccion.equals("NULL")) {
+
+            if (this.Actual.produccion.equals("NULL"))
+            {
+                Emparejar("NULL", true);
+            }else if (this.Actual.produccion.equals("SUM")) {
+                Emparejar("SUM", true);
+                Emparejar("(", true);
+                ExpresionF();
+            } else if (this.Actual.produccion.equals("AVG")) {
+                Emparejar("AVG", true);
+                Emparejar("(", true);
+                ExpresionF();
+            } else if (this.Actual.produccion.equals("MIN")) {
+                Emparejar("MIN", true);
+                Emparejar("(", true);
+                ExpresionF();
+            } else if (this.Actual.produccion.equals("MAX")) {
+                Emparejar("MAX", true);
+                Emparejar("(", true);
+                ExpresionF();
+            } else if (this.Actual.produccion.equals("COUNT")) {
+                Emparejar("COUNT", true);
+                Emparejar("(", true);
+                ExpresionF();
+            }
+
+        } else {
+
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | (", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ExpresionF() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            Object4();
+            Emparejar(")", true);
+        } else if (this.Actual.token == Token.Int) {
+            Emparejar("Int", false);
+            Emparejar(")", true);
+        } else if (this.Actual.produccion.equals("*")){
+            Emparejar("*", true);
+            Emparejar(")", true);
+        }
+    }
+
+    private void Expresiones() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Expresion();
+            Expresiones();
+        }
+    }
+
+    private void Predicado() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") 
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@") 
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL") 
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG") 
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX") 
+                || this.Actual.produccion.equals("COUNT")) {
+
+            Expresion();
+            PredicadoA();
+        } else {
+
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | (", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void NotPredicado() {
+        if (this.Actual.produccion.equals("NOT")) {
+            Emparejar("NOT", true);
+        }
+    }
+
+    private void PredicadoA() {
+        if (this.Actual.produccion.equals("=") || this.Actual.produccion.equals("!=") 
+                || this.Actual.produccion.equals(">") || this.Actual.produccion.equals(">=") 
+                || this.Actual.produccion.equals("<") || this.Actual.produccion.equals("<=") ) {
+
+            OperadoresBooleanos();
+            Expresion();
+        } else if (this.Actual.produccion.equals("NOT")) {
+
+            NotPredicado();
+            PredicadoB();
+        } else if (this.Actual.produccion.equals("BETWEEN") || this.Actual.produccion.equals("IN") 
+                || this.Actual.produccion.equals("LIKE")) {
+
+            PredicadoB();
+        } else if (this.Actual.produccion.equals("IS")) {
+
+            Emparejar("IS", true);
+            NotPredicado();
+            Emparejar("NULL", true);
+        } else {
+
+            RaiseError("= | != | > | < | >= | <= | NOT | BETWEEN | IN | LIKE | IS", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void PredicadoB() {
+        if (this.Actual.produccion.equals("BETWEEN")) {
+
+            Emparejar("BETWEEN", true);
+            Expresion();
+            Emparejar("AND", true);
+            Expresion();
+        } else if (this.Actual.produccion.equals("IN")) {
+
+            Emparejar("IN", true);
+            Emparejar("(", true);
+            Expresion();
+            Expresiones();
+            Emparejar(")", true);
+        } else if (this.Actual.produccion.equals("LIKE")) {
+
+            Emparejar("LIKE", true);
+            Expresion();
+        } else {
+
+            RaiseError("BETWEEN | IN | LIKE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void SearchCondition() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") 
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@") 
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL") 
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG") 
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX") 
+                || this.Actual.produccion.equals("COUNT")) {
+
+            Predicado();
+            SearchConditionA();
+        } else if (this.Actual.produccion.equals("NOT")) {
+
+            Emparejar("NOT", true);
+            Predicado();
+            SearchConditionA();
+        } else {
+
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | ( ", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void SearchConditionA() {
+        if (this.Actual.produccion.equals("AND")) {
+
+            Emparejar("AND", true);
+            SearchCondition();
+            SearchConditionA();
+        } else if (this.Actual.produccion.equals("OR")) {
+
+            Emparejar("OR", true);
+            SearchCondition();
+            SearchConditionA();
+        }
+    }
+
+    private void OperadoresBooleanos() {
+        if (this.Actual.produccion.equals("=") || this.Actual.produccion.equals("!=") 
+                || this.Actual.produccion.equals(">") || this.Actual.produccion.equals(">=") 
+                || this.Actual.produccion.equals("<") || this.Actual.produccion.equals("<=")) {
+            if (this.Actual.produccion.equals("=")) {
+                Emparejar("=", true);
+            } else if (this.Actual.produccion.equals("!=")) {
+                Emparejar("!=", true);
+            }else if (this.Actual.produccion.equals(">")) {
+                Emparejar(">", true);
+            } else if (this.Actual.produccion.equals(">=")) {
+                Emparejar(">=", true);
+            } else if (this.Actual.produccion.equals("<")) {
+                Emparejar("<", true);
+            } else if (this.Actual.produccion.equals("<=")) {
+                Emparejar("<=", true);
+            } else {
+                RaiseError("= | != | > | >= | < | <=", this.Actual.linea, this.Actual.columna);
+            }
+        }
+    }
+
+    private void Not() {
+        if (this.Actual.produccion.equals("NOT")) {
+            Emparejar("NOT", true);
+        }
+    }
+
+    private void Top() {
+        if (this.Actual.produccion.equals("TOP")) {
+
+            Emparejar("TOP", true);
+            Emparejar("(", true);
+            Emparejar("Int", false);
+            Emparejar(")", true);
+            TopA();
+        }
+    }
+
+    private void TopA() {
+        if (this.Actual.produccion.equals("PERCENT")) {
+            Emparejar("PERCENT", true);
+        }
+    }
+
+    private void Constante() {
+        if (this.Actual.token == Token.Bit || this.Actual.token == Token.Int 
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial 
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("NULL")) {
+
+            if (this.Actual.token == Token.Bit) {
+                Emparejar("Bit", false);
+            } else if (this.Actual.token == Token.Int) {
+                Emparejar("Int", false);
+            } else if (this.Actual.token == Token.Float) {
+                Emparejar("Float", false);
+            } else if (this.Actual.token == Token.FloatExponencial) {
+                Emparejar("FloatExponencial", false);
+            } else if (this.Actual.token == Token.String) {
+                Emparejar("String", false);
+            } else if (this.Actual.produccion.equals("NULL")) {
+                Emparejar("NULL", true);
+            }
+        } else if (this.Actual.produccion.equals("@")) {
+
+            Emparejar("@", true);
+            Emparejar("Identificador", false);
+        }
+    }
+
+    private void Where() {
+        if (this.Actual.produccion.equals("WHERE")) {
+
+            Emparejar("WHERE", true);
+            SearchCondition();
+        }
+    }
+
+    private void FromSelect() {
+        if (this.Actual.produccion.equals("FROM")) {
+
+            Emparejar("FROM", true);
+            Object3();
+            Alias();
+            Join();
+            FromSelectA();
+        }
+    }
+
+    private void FromSelectA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Object3();
+            Alias();
+            Join();
+        }
+    }
+
+    private void Join() {
+        if (this.Actual.produccion.equals("INNER") || this.Actual.produccion.equals("RIGHT") 
+                || this.Actual.produccion.equals("LEFT") || this.Actual.produccion.equals("FULL")
+                || this.Actual.produccion.equals("JOIN")) {
+
+            Type();
+            Emparejar("JOIN", true);
+            Object3();
+            Alias();
+            Emparejar("ON", true);
+            SearchCondition();
+            Join();
+        }
+    }
+
+    private void Type() {
+        if (this.Actual.produccion.equals("INNER") || this.Actual.produccion.equals("RIGHT") || this.Actual.produccion.equals("LEFT") || this.Actual.produccion
+                .equals("FULL")) {
+            if (this.Actual.produccion.equals("INNER")) {
+
+                Emparejar("INNER", true);
+            } else if (this.Actual.produccion.equals("RIGHT")) {
+
+                Emparejar("RIGHT", true);
+                Outer();
+            } else if (this.Actual.produccion.equals("LEFT")) {
+
+                Emparejar("LEFT", true);
+                Outer();
+            } else if (this.Actual.produccion.equals("FULL")) {
+
+                Emparejar("FULL", true);
+                Outer();
+            }
+        }
+    }
+
+    private void Outer() {
+        if (this.Actual.produccion.equals("OUTER")) {
+            Emparejar("OUTER", true);
+        }
+    }
+
+    // --------PRODUCCIONES PRINCIPALES--------
+    private void InicialA() {
+        if (this.Actual.produccion.equals("SELECT")) {
+            Select();
+        } else if (this.Actual.produccion.equals("INSERT")) {
+            Insert();
+        } else if (this.Actual.produccion.equals("DELETE")) {
+            Delete();
+        } else if (this.Actual.produccion.equals("UPDATE")) {
+            Update();
+        } else if (this.Actual.produccion.equals("CREATE")) {
+            Create();
+        } else if (this.Actual.produccion.equals("ALTER")) {
+            Alter();
+        } else if (this.Actual.produccion.equals("DROP")) {
+            Drop();
+        } else if (this.Actual.produccion.equals("TRUNCATE")) {
+            Truncate();
+        } else {
+            RaiseError("SELECT | INSERT | DELETE | UPDATE | CREATE | ALTER | DROP | TRUNCATE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Select() {
+        if (this.Actual.produccion.equals("SELECT")) {
+
+            Emparejar("SELECT", true);
+            SelectA();
+            Top();
+            SelectColumns();
+            FromSelect();
+            Where();
+            Group();
+            Having();
+            Order();
+        }
+    }
+
+    private void SelectA() {
+        if (this.Actual.produccion.equals("ALL") || this.Actual.produccion.equals("DISTINCT")) {
+            if (this.Actual.produccion.equals("ALL")) {
+                Emparejar("ALL", true);
+            } else if (this.Actual.produccion.equals("DISTINCT")) {
+                Emparejar("DISTINCT", true);
+            }
+        }
+    }
+
+    private void Having() {
+        if (this.Actual.produccion.equals("HAVING")) {
+
+            Emparejar("HAVING", true);
+            SearchCondition();
+        }
+    }
+
+    private void Order() {
+        if (this.Actual.produccion.equals("ORDER")) {
+
+            Emparejar("ORDER", true);
+            Emparejar("BY", true);
+            Expresion();
+            OrderA();
+            OrderB();
+            OrderC();
+        }
+    }
+
+    private void OrderA() {
+        if (this.Actual.produccion.equals("COLLATE")) {
+
+            Emparejar("COLLATE", true);
+            ID();
+        }
+    }
+
+    private void OrderB() {
+        if (this.Actual.produccion.equals("ASC") || this.Actual.produccion.equals("DESC")) {
+            if (this.Actual.produccion.equals("ASC")) {
+                Emparejar("ASC", true);
+            } else if (this.Actual.produccion.equals("DESC")) {
+                Emparejar("DESC", true);
+            }
+        }
+    }
+
+    private void OrderC() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@")
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL")
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG")
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX")
+                || this.Actual.produccion.equals("COUNT")) {
+
+            Expresion();
+            OrderA();
+            OrderB();
+        }
+    }
+
+    private void Group() {
+        if (this.Actual.produccion.equals("GROUP")) {
+
+            Emparejar("GROUP", true);
+            Emparejar("BY", true);
+            Expresion();
+            GroupA();
+        }
+    }
+
+    private void GroupA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Expresion();
+            GroupA();
+        }
+    }
+
+    private void SelectColumns() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || this.Actual.token == Token.Bit || this.Actual.token == Token.Int
+                || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial
+                || this.Actual.token == Token.String || this.Actual.produccion.equals("@")
+                || this.Actual.produccion.equals("(") || this.Actual.produccion.equals("NULL")
+                || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG")
+                || this.Actual.produccion.equals("MIN") || this.Actual.produccion.equals("MAX")
+                || this.Actual.produccion.equals("COUNT")) {
+            Expresion();
+            Alias();
+            SelectColumnsA();
+        } else if (this.Actual.produccion.equals("*")) {
+            Emparejar("*", true);
+            SelectColumnsA();
+        } else {
+            RaiseError("Identificador | [ | Bit | Int | Float | String | @ | ( | NULL | SUM | AVG | MIN | MAX | COUNT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void SelectColumnsA() {
+        if (this.Actual.produccion.equals(",")) {
+            Emparejar(",", true);
+            Expresion();
+            Alias();
+            SelectColumnsA();
+        }
+    }
+
+    private void ColumnList() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            ColumnListA();
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("(", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnListA() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            ID();
+            ColumnListB();
+        } else {
+
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnListB() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            ID();
+            ColumnListB();
+        }
+    }
+
+    private void Insert() {
+        if (this.Actual.produccion.equals("INSERT")) {
+
+            Emparejar("INSERT", true);
+            Top();
+            InsertInto();
+            Object3();
+            InsertColumnList();
+            InsertValores();
+        } else {
+
+            RaiseError("INSERT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void InsertInto() {
+        if (this.Actual.produccion.equals("INTO")) {
+            Emparejar("INTO", true);
+        }
+    }
+
+    private void InsertColumnList() {
+        if (this.Actual.produccion.equals("(")) {
+            ColumnList();
+        }
+    }
+
+    private void InsertExpresion() {
+        if (this.Actual.produccion.equals("DEFAULT") || this.Actual.token == Token.Int || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial || this.Actual.token == Token.String || this.Actual.token == Token.Bit) {
+
+            InsertExpresionA();
+            InsertExpresionB();
+        } else {
+
+            RaiseError("DEFAULT | Int | Float | String | Float | String | Bit", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void InsertExpresionA() {
+        if (this.Actual.produccion.equals("DEFAULT") || this.Actual.token == Token.Int || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial || this.Actual.token == Token.String || this.Actual.token == Token.Bit) {
+
+            if (this.Actual.produccion.equals("DEFAULT")) {
+                Emparejar("DEFAULT", true);
+            } else if (this.Actual.token == Token.Int) {
+                Emparejar("Int", false);
+            } else if (this.Actual.token == Token.Float) {
+                Emparejar("Float", false);
+            } else if (this.Actual.token == Token.FloatExponencial) {
+                Emparejar("FloatExponencial", false);
+            } else if (this.Actual.token == Token.String) {
+                Emparejar("String", false);
+            } else if (this.Actual.token == Token.Bit) {
+                Emparejar("Bit", false);
+            }
+        } else {
+
+            RaiseError("DEFAULT | Int | Float | String | Float | String | Bit", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void InsertExpresionB() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            InsertExpresionA();
+            InsertExpresionB();
+        }
+    }
+
+    private void InsertValores() {
+        if (this.Actual.produccion.equals("VALUES") || this.Actual.produccion.equals("DEFAULT")) {
+
+            if (this.Actual.produccion.equals("VALUES")) {
+                Emparejar("VALUES", true);
+                Emparejar("(", true);
+                InsertExpresion();
+                Emparejar(")", true);
+                InsertValoresA();
+            } else if (this.Actual.produccion.equals("DEFAULT")) {
+                Emparejar("DEFAULT", true);
+                Emparejar("VALUES", true);
+            }
+
+        } else {
+
+            RaiseError("VALUES | DEFAULT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void InsertValoresA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Emparejar("(", true);
+            InsertExpresion();
+            Emparejar(")", true);
+            InsertValoresA();
+        }
+    }
+
+    private void Delete() {
+        if (this.Actual.produccion.equals("DELETE")) {
+
+            Emparejar("DELETE", true);
+            Top();
+            FromDelete();
+            DeleteA();
+        } else {
+
+            RaiseError("DELETE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void FromDelete() {
+        if (this.Actual.produccion.equals("FROM")) {
+            Emparejar("FROM", true);
+        }
+    }
+
+    private void DeleteA() {
+        if (this.Actual.produccion.equals("OPENQUERY")) {
+
+            Emparejar("OPENQUERY", true);
+            Server();
+        } else if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            Object3();
+            DeleteB();
+            Where();
+        } else {
+
+            RaiseError("OPENQUERY | Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DeleteB() {
+        if (this.Actual.produccion.equals("FROM")) {
+
+            Emparejar("FROM", true);
+            Object3();
+            DeleteC();
+        } else {
+
+            RaiseError("FROM", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DeleteC() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Object3();
+            DeleteC();
+        }
+    }
+
+    private void Server() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            ID();
+            Emparejar(",", true);
+            Emparejar("String", false);
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("(", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void Update() {
+        if (this.Actual.produccion.equals("UPDATE")) {
+            Emparejar("UPDATE", true);
+            Top();
+            Object3();
+            Emparejar("SET", true);
+            UpdateA();
+            FromUpdate();
+            Where();
+        } else {
+            RaiseError("UPDATE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void UpdateA() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            ID();
+            Emparejar("=", true);
+            UpdateB();
+            UpdateC();
+        }
+        else 
+        {
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void UpdateB() {
+        if (this.Actual.produccion.equals("DEFAULT")) {
+            Emparejar("DEFAULT", true);
+        } else if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") || this.Actual.token == Token.Bit || this.Actual.token == Token.Int || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial || this.Actual.token == Token.String || this.Actual.produccion
+                .equals("@") || this.Actual.produccion.equals("(") || this.Actual.produccion
+                .equals("NULL") || this.Actual.produccion.equals("SUM") || this.Actual.produccion.equals("AVG") || this.Actual.produccion
+                .equals("MIN") || this.Actual.produccion.equals("MAX") || this.Actual.produccion.equals("COUNT")) {
+            Expresion();
+        } else {
+            RaiseError("DEFAULT | Identificador | [ | Bit | Int | Float | String | @ | (", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void UpdateC() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            UpdateA();
+            UpdateC();
+        }
+    }
+
+    private void FromUpdate() {
+        if (this.Actual.produccion.equals("FROM")) {
+
+            Emparejar("FROM", true);
+            Object3();
+            DeleteC();
+        }
+    }
+
+    private void Create() {
+        if (this.Actual.produccion.equals("CREATE")) {
+
+            Emparejar("CREATE", true);
+            CreateA();
+        }
+    }
+
+    private void CreateA() {
+        if (this.Actual.produccion.equals("TABLE") || this.Actual.produccion.equals("DATABASE") 
+                || this.Actual.produccion.equals("INDEX") || this.Actual.produccion.equals("USER") 
+                || this.Actual.produccion.equals("VIEW")|| this.Actual.produccion.equals("UNIQUE") 
+                || this.Actual.produccion.equals("CLUSTERED") || this.Actual.produccion.equals("NONCLUSTERED")) {
+
+            if (this.Actual.produccion.equals("TABLE")) {
+                CreateTable();
+            } else if (this.Actual.produccion.equals("DATABASE")) {
+                CreateDB();
+            } else if (this.Actual.produccion.equals("INDEX") || this.Actual.produccion.equals("UNIQUE") 
+                || this.Actual.produccion.equals("CLUSTERED") || this.Actual.produccion.equals("NONCLUSTERED")) {
+                CreateIndex();
+            } else if (this.Actual.produccion.equals("USER")) {
+                CreateUser();
+            } else if (this.Actual.produccion.equals("VIEW")) {
+                CreateView();
+            }
+        } else {
+
+            RaiseError("TABLE | DATABASE | INDEX | USER | VIEW", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void CreateDB() {
+        if (this.Actual.produccion.equals("DATABASE")) {
+
+            Emparejar("DATABASE", true);
+            ID();
+            CreateDBA();
+        } else {
+
+            RaiseError("DATABASE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void CreateDBA() {
+        if (this.Actual.produccion.equals("COLLATE")) {
+
+            Emparejar("COLLATE", true);
+            ID();
+        }
+    }
+
+    private void CreateUser() {
+        if (this.Actual.produccion.equals("USER")) {
+
+            Emparejar("USER", true);
+            Emparejar("Identificador", false);
+        } else {
+
+            RaiseError("USER", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void CreateView() {
+        if (this.Actual.produccion.equals("VIEW")) {
+
+            Emparejar("VIEW", true);
+            Object2();
+            Emparejar("AS", true);
+            Select();
+        } else {
+
+            RaiseError("VIEW", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void CreateIndex() {
+        if (this.Actual.produccion.equals("UNIQUE") || this.Actual.produccion.equals("CLUSTERED") 
+                || this.Actual.produccion.equals("NONCLUSTERED") || this.Actual.produccion.equals("INDEX")) {
+            if (this.Actual.produccion.equals("UNIQUE"))
+            {
+                CreateIndexA();
+                ColumnConstrC();
+                Emparejar("INDEX", true);
+                ID();
+                Emparejar("ON", true);
+                Object3();
+                ColumnIndex();
+                IncludeIndex();
+                Where();
+                OptionalOn();
+            }
+            else if (this.Actual.produccion.equals("CLUSTERED") || this.Actual.produccion.equals("NONCLUSTERED")){
+                ColumnConstrC();
+                Emparejar("INDEX", true);
+                ID();
+                Emparejar("ON", true);
+                Object3();
+                ColumnIndex();
+                IncludeIndex();
+                Where();
+                OptionalOn();
+            }
+            else if (this.Actual.produccion.equals("INDEX"))
+            {
+                Emparejar("INDEX", true);
+                ID();
+                Emparejar("ON", true);
+                Object3();
+                ColumnIndex();
+                IncludeIndex();
+                Where();
+                OptionalOn();
+            }
+        }
+        else
+        {
+            RaiseError("UNIQUE | CLUSTERED | NONCLUSTERED | INDEX", this.Actual.linea, this.Actual.columna);
+        }
     }
     
+    private void CreateIndexA()
+    {
+        if (this.Actual.produccion.equals("UNIQUE"))
+            Emparejar("UNIQUE", true);
+    }
+
+    private void ColumnIndex()
+    {
+        if(this.Actual.produccion.equals("("))
+        {
+            Emparejar("(", true);
+            ColumnIndexA();
+            Emparejar(")", true);
+        }
+        else{
+            RaiseError("(", this.Actual.linea, this.Actual.columna);
+        }
+    }
+    
+    private void ColumnIndexA()
+    {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            ID();
+            OrderB();
+            ColumnIndexB();
+        }
+        else{
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+    
+    private void ColumnIndexB()
+    {
+        if (this.Actual.produccion.equals(",")) {
+            Emparejar(",", true);
+            ID();
+            OrderB();
+            ColumnIndexB();
+        }
+    }
+    
+    private void IncludeIndex()
+    {
+        if (this.Actual.produccion.equals("INCLUDE")) {
+            Emparejar("INCLUDE", true);
+            ColumnList();
+        }
+
+    }
+    
+    private void OptionalOn()
+    {
+        if (this.Actual.produccion.equals("ON")) {
+            Emparejar("ON", true);
+            ID();
+            Emparejar("(", true);
+            ID();
+            Emparejar(")", true);
+        }
+    }
+    
+    private void CreateTable() {
+        if (this.Actual.produccion.equals("TABLE")) {
+
+            Emparejar("TABLE", true);
+            Object3();
+            Emparejar("(", true);
+            CNC();
+            CNCA();
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("TABLE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void NFR() {
+        if (this.Actual.produccion.equals("NOT")) {
+            Emparejar("NOT", true);
+            
+            if (this.Actual.produccion.equals("FOR"))
+            {
+                Emparejar("FOR", true);
+                Emparejar("REPLICATION", true);
+            }
+            else if (this.Actual.produccion.equals("NULL"))
+            {
+                Emparejar("NULL", true);
+            }
+        }
+    }
+
+    private void CNC() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[") 
+                || this.Actual.produccion.equals("CONSTRAINT") || this.Actual.produccion.equals("PRIMARY") 
+                || this.Actual.produccion.equals("UNIQUE") || this.Actual.produccion.equals("FOREIGN") 
+                || this.Actual.produccion.equals("CHECK") || this.Actual.produccion.equals("INDEX")) {
+
+            if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+                ColumnDef();
+            } else if (this.Actual.produccion.equals("UNIQUE") || this.Actual.produccion.equals("FOREIGN") 
+                    || this.Actual.produccion.equals("CHECK") || this.Actual.produccion.equals("CONSTRAINT") 
+                    || this.Actual.produccion.equals("PRIMARY")) {
+                TableConstr();
+            } else if (this.Actual.produccion.equals("INDEX")) {
+                TableIndex();
+            }
+        } else {
+
+            RaiseError("Identificador | [ | CONSTRAINT | PRIMARY | INDEX", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void CNCA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            CNC();
+            CNCA();
+        }
+    }
+
+    private void ColumnDef() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            ID();
+            Tipo_Dato();
+            ColumnDefA();
+            ColumnDefB();
+            ColumnDefE();
+            NFR();
+            ColumnDefG();
+            ColumnDefH();
+            ColumnConstr();
+        } else {
+
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnDefA() {
+        if (this.Actual.produccion.equals("COLLATE")) {
+
+            Emparejar("COLLATE", true);
+            ID();
+        }
+    }
+
+    private void ColumnDefB() {
+        if (this.Actual.produccion.equals("CONSTRAINT")) {
+
+            Emparejar("CONSTRAINT", true);
+            ID();
+            ColumnDefC();
+        }
+    }
+
+    private void ColumnDefC() {
+        if (this.Actual.produccion.equals("DEFAULT")) {
+
+            Emparejar("DEFAULT", true);
+            ColumnDefD();
+        }
+    }
+
+    private void ColumnDefD() {
+        if (this.Actual.token == Token.Int || this.Actual.token == Token.Float || this.Actual.token == Token.FloatExponencial || this.Actual.token == Token.String || this.Actual.token == Token.Bit || this.Actual.produccion
+                .equals("NULL")) {
+
+            if (this.Actual.token == Token.Int) {
+                Emparejar("Int", false);
+            } else if (this.Actual.token == Token.Float) {
+                Emparejar("Float", false);
+            } else if (this.Actual.token == Token.FloatExponencial) {
+                Emparejar("FloatExponencial", false);
+            } else if (this.Actual.token == Token.String) {
+                Emparejar("String", false);
+            } else if (this.Actual.token == Token.Bit) {
+                Emparejar("Bit", false);
+            } else if (this.Actual.produccion.equals("NULL")) {
+                Emparejar("NULL", true);
+            }
+        } else {
+
+            RaiseError("Int | Float | String | Bit | NULL", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnDefE() {
+        if (this.Actual.produccion.equals("IDENTITY")) {
+
+            Emparejar("IDENTITY", true);
+            ColumnDefF();
+        }
+    }
+
+    private void ColumnDefF() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            Emparejar("Int", false);
+            Emparejar(",", true);
+            Emparejar("Int", false);
+            Emparejar(")", true);
+        }
+    }
+
+    private void ColumnDefG() {
+        if (this.Actual.produccion.equals("NULL") || this.Actual.produccion.equals("NOT")) {
+            if (this.Actual.produccion.equals("NULL")) {
+
+                Emparejar("NULL", true);
+            } else if (this.Actual.produccion.equals("NOT")) {
+
+                Emparejar("NOT", true);
+                Emparejar("NULL", true);
+            }
+        }
+    }
+
+    private void ColumnDefH() {
+        if (this.Actual.produccion.equals("ROWGUIDCOL")) {
+            Emparejar("ROWGUIDCOL", true);
+        }
+    }
+
+    private void ColumnConstr() {
+        if (this.Actual.produccion.equals("CONSTRAINT")) {
+
+            ColumnConstrA();
+            ColumnConstrB();
+            ColumnConstr();
+        } else if (this.Actual.produccion.equals("PRIMARY") || this.Actual.produccion.equals("UNIQUE") 
+                || this.Actual.produccion.equals("FOREIGN") || this.Actual.produccion.equals("CHECK")
+                || this.Actual.produccion.equals("REFERENCES")) {
+
+            ColumnConstrB();
+            ColumnConstr();
+        } else if (this.Actual.produccion.equals("CLUSTERED") || this.Actual.produccion.equals("NONCLUSTERED")) {
+
+            ColumnConstr();
+        }
+    }
+
+    private void ColumnConstrA() {
+        if (this.Actual.produccion.equals("CONSTRAINT")) {
+
+            Emparejar("CONSTRAINT", true);
+            ID();
+        }
+    }
+
+    private void ColumnConstrB() {
+        if (this.Actual.produccion.equals("PRIMARY") || this.Actual.produccion.equals("UNIQUE") 
+                || this.Actual.produccion.equals("FOREIGN") || this.Actual.produccion.equals("CHECK")
+                || this.Actual.produccion.equals("REFERENCES")) {
+
+            if (this.Actual.produccion.equals("PRIMARY")) {
+                Emparejar("PRIMARY", true);
+                Emparejar("KEY", true);
+                ColumnConstrC();
+            } else if (this.Actual.produccion.equals("UNIQUE")) {
+                Emparejar("UNIQUE", true);
+                ColumnConstrC();
+            } else if (this.Actual.produccion.equals("FOREIGN")) {
+                ColumnConstrD();
+                Emparejar("REFERENCES", true);
+                Object2();
+                ColumnConstrE();
+                ColumnConstrF();
+                ColumnConstrG();
+                NFR();
+            } else if (this.Actual.produccion.equals("REFERENCES")){
+                Emparejar("REFERENCES", true);
+                Object2();
+                ColumnConstrE();
+                ColumnConstrF();
+                ColumnConstrG();
+                NFR();
+            } else if (this.Actual.produccion.equals("CHECK")) {
+                Emparejar("CHECK", true);
+                NFR();
+                Emparejar("(", true);
+                SearchCondition();
+                Emparejar(")", true);
+            }
+
+        } else {
+
+            RaiseError("PRIMARY | UNIQUE | FOREIGN | CHECK", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnConstrC() {
+        if (this.Actual.produccion.equals("CLUSTERED") || this.Actual.produccion.equals("NONCLUSTERED")) {
+            if (this.Actual.produccion.equals("CLUSTERED")) {
+                Emparejar("CLUSTERED", true);
+            } else if (this.Actual.produccion.equals("NONCLUSTERED")) {
+                Emparejar("NONCLUSTERED", true);
+            }
+        }
+    }
+
+    private void ColumnConstrD() {
+        if (this.Actual.produccion.equals("FOREIGN")) {
+
+            Emparejar("FOREIGN", true);
+            Emparejar("KEY", true);
+        }
+    }
+
+    private void ColumnConstrE() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            ID();
+            Emparejar(")", true);
+        }
+    }
+
+    private void ColumnConstrF() {
+        if (this.Actual.produccion.equals("ON")) {
+
+            Emparejar("ON", true);
+            Emparejar("DELETE", true);
+            ColumnConstrI();
+        }
+    }
+
+    private void ColumnConstrG() {
+        if (this.Actual.produccion.equals("ON")) {
+
+            Emparejar("ON", true);
+            Emparejar("UPDATE", true);
+            ColumnConstrI();
+        }
+    }
+
+    private void ColumnConstrH() {
+        if (this.Actual.produccion.equals("NULL") || this.Actual.produccion.equals("DEFAULT")) {
+
+            if (this.Actual.produccion.equals("NULL")) {
+                Emparejar("NULL", true);
+            } else if (this.Actual.produccion.equals("DEFAULT")) {
+                Emparejar("DEFAULT", true);
+            }
+        } else {
+
+            RaiseError("NULL | DEFAULT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void ColumnConstrI() {
+        if (this.Actual.produccion.equals("CASCADE") || this.Actual.produccion.equals("SET")) {
+            if (this.Actual.produccion.equals("CASCADE")) {
+
+                Emparejar("CASCADE", true);
+            } else if (this.Actual.produccion.equals("SET")) {
+
+                Emparejar("SET", true);
+                ColumnConstrH();
+            }
+        }
+    }
+
+    private void TableConstr() {
+        if (this.Actual.produccion.equals("UNIQUE") || this.Actual.produccion.equals("FOREIGN") 
+                || this.Actual.produccion.equals("CHECK") || this.Actual.produccion.equals("CONSTRAINT") 
+                || this.Actual.produccion.equals("PRIMARY")) {
+
+            ColumnConstrA();
+            TableConstrA();
+        } else {
+
+            RaiseError("CONSTRAINT | PRIMARY | UNIQUE | FOREIGN | CHECK", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void TableConstrA() {
+        if (this.Actual.produccion.equals("PRIMARY") || this.Actual.produccion.equals("UNIQUE") || this.Actual.produccion
+                .equals("FOREIGN") || this.Actual.produccion.equals("CHECK")) {
+
+            if (this.Actual.produccion.equals("PRIMARY")) {
+                Emparejar("PRIMARY", true);
+                Emparejar("KEY", true);
+                ColumnConstrC();
+                TableConstrB();
+            } else if (this.Actual.produccion.equals("UNIQUE")) {
+                Emparejar("UNIQUE", true);
+                ColumnConstrC();
+                TableConstrB();
+            } else if (this.Actual.produccion.equals("FOREIGN")) {
+                Emparejar("FOREIGN", true);
+                Emparejar("KEY", true);
+                TableConstrD();
+                Emparejar("REFERENCES", true);
+                Object2();
+                ColumnConstrE();
+                ColumnConstrF();
+                ColumnConstrG();
+                NFR();
+            } else if (this.Actual.produccion.equals("CHECK")) {
+                Emparejar("CHECK", true);
+                NFR();
+                Emparejar("(", true);
+                SearchCondition();
+                Emparejar(")", true);
+            }
+
+        } else {
+
+            RaiseError("PRIMARY | UNIQUE | FOREIGN | CHECK", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void TableConstrB() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            ID();
+            OrderB();
+            TableConstrC();
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("(", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void TableConstrC() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            ID();
+            OrderB();
+            TableConstrC();
+        }
+    }
+
+    private void TableConstrD() {
+        if (this.Actual.produccion.equals("(")) {
+
+            Emparejar("(", true);
+            ID();
+            TableConstrE();
+            Emparejar(")", true);
+        } else {
+
+            RaiseError("(", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void TableConstrE() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            ID();
+            TableConstrE();
+        }
+    }
+
+    private void TableIndex() {
+        if (this.Actual.produccion.equals("INDEX")) {
+
+            Emparejar("INDEX", true);
+            ID();
+            ColumnConstrC();
+            TableConstrB();
+        }
+    }
+
+    private void Alter() {
+        if (this.Actual.produccion.equals("ALTER")) {
+
+            Emparejar("ALTER", true);
+            AlterA();
+        } else {
+
+            RaiseError("ALTER", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterA() {
+        if (this.Actual.produccion.equals("TABLE") || this.Actual.produccion.equals("USER") || this.Actual.produccion
+                .equals("DATABASE") || this.Actual.produccion.equals("VIEW")) {
+
+            if (this.Actual.produccion.equals("TABLE")) {
+                AlterTable();
+            } else if (this.Actual.produccion.equals("USER")) {
+                AlterUser();
+            } else if (this.Actual.produccion.equals("DATABASE")) {
+                AlterDB();
+            } else if (this.Actual.produccion.equals("VIEW")) {
+                AlterView();
+            }
+        } else {
+
+            RaiseError("TABLE | USER | DATABASE | VIEW", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterDB() {
+        if (this.Actual.produccion.equals("DATABASE")) {
+
+            Emparejar("DATABASE", true);
+            AlterDBA();
+            AlterDBB();
+        } else {
+
+            RaiseError("DATABASE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterDBA() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+            ID();
+        } else if (this.Actual.produccion.equals("CURRENT")) {
+            Emparejar("CURRENT", true);
+        } else {
+            RaiseError("Identificador | [ | CURRENT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterDBB() {
+        if (this.Actual.produccion.equals("COLLATE")) {
+
+            Emparejar("COLLATE", true);
+            ID();
+        } else if (this.Actual.produccion.equals("SET")) {
+
+            Emparejar("SET", true);
+            Emparejar("ROLLBACK", true);
+            Emparejar("IMMEDIATE", true);
+        } else {
+
+            RaiseError("COLLATE | SET", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterUser() {
+        if (this.Actual.produccion.equals("USER")) {
+
+            Emparejar("USER", true);
+            ID();
+        } else {
+
+            RaiseError("USER", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterView() {
+        if (this.Actual.produccion.equals("VIEW")) {
+
+            Emparejar("VIEW", true);
+            Object2();
+            AlterViewA();
+            Emparejar("AS", true);
+            Select();
+        } else {
+
+            RaiseError("VIEW", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterViewA()
+    {
+        if (Actual.produccion.equals("("))
+        {
+            ColumnList();
+        }
+    }
+    
+    private void AlterTable() {
+        if (this.Actual.produccion.equals("TABLE")) {
+
+            Emparejar("TABLE", true);
+            Object3();
+            AlterTableA();
+        } else {
+
+            RaiseError("TABLE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterTableA() {
+        if (this.Actual.produccion.equals("ALTER") || this.Actual.produccion.equals("ADD") || this.Actual.produccion.equals("DROP")) {
+
+            if (this.Actual.produccion.equals("ALTER")) {
+                AlterColumn();
+            } else if (this.Actual.produccion.equals("ADD")) {
+                Emparejar("ADD", true);
+                CNC();
+                CNCA();
+            } else if (this.Actual.produccion.equals("DROP")) {
+                AlterTableDrop();
+            }
+
+        } else {
+
+            RaiseError("ALTER | ADD | DROP", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterColumn() {
+        if (this.Actual.produccion.equals("ALTER")) {
+
+            Emparejar("ALTER", true);
+            Emparejar("COLUMN", true);
+            ID();
+            AlterColumnC();
+        } else {
+
+            RaiseError("ALTER", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterColumnA() {
+        if (this.Actual.token == Token.TIPO || this.Actual.produccion.equals("[")) {
+
+            Tipo_Dato();
+            ColumnDefA();
+            ColumnDefG();
+        } else {
+
+            RaiseError("Tipo de Dato | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterColumnC() {
+        if (this.Actual.token == Token.TIPO || this.Actual.produccion.equals("[") || this.Actual.produccion
+                .equals("ADD") || this.Actual.produccion.equals("DROP")) {
+
+            if (this.Actual.token == Token.TIPO || this.Actual.produccion.equals("[")) {
+                AlterColumnA();
+            } else if (this.Actual.produccion.equals("ADD") || this.Actual.produccion.equals("DROP")) {
+                AlterColumnD();
+                AlterColumnE();
+            }
+
+        } else {
+
+            RaiseError("Tipo de Dato | [ | ADD | DROP", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterColumnD() {
+        if (this.Actual.produccion.equals("ADD") || this.Actual.produccion.equals("DROP")) {
+
+            if (this.Actual.produccion.equals("ADD")) {
+                Emparejar("ADD", true);
+            } else if (this.Actual.produccion.equals("DROP")) {
+                Emparejar("DROP", true);
+            }
+        } else {
+
+            RaiseError("ADD | DROP", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterColumnE() {
+        if (this.Actual.produccion.equals("ROWGUIDCOL") || this.Actual.produccion.equals("NOT")) {
+
+            if (this.Actual.produccion.equals("ROWGUIDCOL")) {
+                Emparejar("ROWGUIDCOL", true);
+            } else if (this.Actual.produccion.equals("NOT")) {
+                Emparejar("NOT", true);
+                Emparejar("FOR", true);
+                Emparejar("REPLICATION", true);
+            }
+
+        } else {
+
+            RaiseError("ROWGUIDCOL | NOT", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterTableDrop() {
+        if (this.Actual.produccion.equals("DROP")) {
+
+            Emparejar("DROP", true);
+            AlterTableDropA();
+            AlterTableDropC();
+        } else {
+
+            RaiseError("DROP", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterTableDropA() {
+        if(this.Actual.produccion.equals("CONSTRAINT") || this.Actual.token == Token.IF 
+                || this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || Actual.produccion.equals("COLUMN"))
+        {
+            if (this.Actual.produccion.equals("CONSTRAINT")) {
+                AlterTableDropB();
+                IFE();
+                ID();
+            }else if (this.Actual.token == Token.IF){
+                IFE();
+                ID();
+            }else if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")){
+                ID();
+            }else if (Actual.produccion.equals("COLUMN")){
+                Emparejar("COLUMN", true);
+                IFE();
+                ID();
+            }
+        }
+        else
+        {
+            RaiseError("CONSTRAINT | IF | Identificador | [ | COLUMN", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void AlterTableDropB() {
+        if (this.Actual.produccion.equals("CONSTRAINT")) {
+                Emparejar("CONSTRAINT", true);
+        }
+    }
+
+    private void AlterTableDropC() {
+        if (this.Actual.produccion.equals(",")) {
+            Emparejar(",", true);
+            AlterTableDropD();
+            AlterTableDropC();
+        }
+    }
+
+    private void AlterTableDropD()
+    {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || this.Actual.produccion.equals("CONSTRAINT") || this.Actual.token == Token.IF 
+                || this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || Actual.produccion.equals("COLUMN"))
+        {
+            if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("["))
+            {
+                ID();
+            }
+            else if (this.Actual.produccion.equals("CONSTRAINT") || this.Actual.token == Token.IF 
+                || this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")
+                || Actual.produccion.equals("COLUMN"))
+            {
+                AlterTableDropA();
+            }
+        }
+        else
+        {
+            
+        }
+    }
+    
+    private void Drop() {
+        if (this.Actual.produccion.equals("DROP")) {
+
+            Emparejar("DROP", true);
+            DropA();
+        } else {
+
+            RaiseError("DROP", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropA() {
+        if (this.Actual.token == Token.DropA) {
+
+            if (this.Actual.produccion.equals("TABLE")) {
+                DropTable();
+            } else if (this.Actual.produccion.equals("USER")) {
+                DropUser();
+            } else if (this.Actual.produccion.equals("DATABASE")) {
+                DropDatabase();
+            } else if (this.Actual.produccion.equals("VIEW")) {
+                DropView();
+            } else if (this.Actual.produccion.equals("INDEX")) {
+                DropIndex();
+            }
+        } else {
+            RaiseError("TABLE | USER | DATABASE | VIEW | INDEX", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropTable() {
+        if (this.Actual.produccion.equals("TABLE")) {
+
+            Emparejar("TABLE", true);
+            IFE();
+            Object3();
+            DropTableA();
+        } else {
+
+            RaiseError("TABLE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropTableA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Object3();
+            DropTableA();
+        }
+    }
+
+    private void DropUser() {
+        if (this.Actual.produccion.equals("USER")) {
+
+            Emparejar("USER", true);
+            IFE();
+            ID();
+        } else {
+
+            RaiseError("USER", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropDatabase() {
+        if (this.Actual.produccion.equals("DATABASE")) {
+            Emparejar("DATABASE", true);
+            IFE();
+            ID();
+            DropDatabaseA();
+        } else {
+            RaiseError("DATABASE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropDatabaseA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Emparejar("Identificador", false);
+            DropDatabaseA();
+        }
+    }
+
+    private void DropView() {
+        if (this.Actual.produccion.equals("VIEW")) {
+
+            Emparejar("VIEW", true);
+            IFE();
+            Object2();
+            DropViewA();
+        } else {
+
+            RaiseError("VIEW", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropViewA() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            Object2();
+            DropViewA();
+        }
+    }
+
+    private void DropIndex() {
+        if (this.Actual.produccion.equals("INDEX")) {
+
+            Emparejar("INDEX", true);
+            IFE();
+            DropIndexA();
+            DropIndexB();
+        } else {
+
+            RaiseError("INDEX", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropIndexA() {
+        if (this.Actual.token == Token.Identificador || this.Actual.produccion.equals("[")) {
+
+            ID();
+            Emparejar("ON", true);
+            Object3();
+        } else {
+
+            RaiseError("Identificador | [", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
+    private void DropIndexB() {
+        if (this.Actual.produccion.equals(",")) {
+
+            Emparejar(",", true);
+            DropIndexA();
+            DropIndexB();
+        }
+    }
+
+    private void Truncate() {
+        if (this.Actual.produccion.equals("TRUNCATE")) {
+
+            Emparejar("TRUNCATE", true);
+            Emparejar("TABLE", true);
+            Object3();
+        } else {
+
+            RaiseError("TRUNCATE", this.Actual.linea, this.Actual.columna);
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -297,8 +2508,12 @@ public class Compilador extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPath;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jtaResultado;
+    private javax.swing.JTextArea jtaResultado1;
     private javax.swing.JLabel lblPath;
     // End of variables declaration//GEN-END:variables
 }
