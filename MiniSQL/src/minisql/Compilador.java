@@ -441,7 +441,10 @@ public class Compilador extends javax.swing.JFrame {
                 
             //JOptionPane.showMessageDialog(null, "Sentencia. " + Sentencia + "\n\nERROR: Se esperaba: " + Esperado + "\n" + "En la linea " + linea + " y en la columna " + columna);
             ErrorSintactico = true;
-        }    
+        }
+        else{
+            this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+        }
     }
 
     private void Inicial() {
@@ -1501,7 +1504,7 @@ public class Compilador extends javax.swing.JFrame {
         if (this.Actual.produccion.equals("USER")) {
 
             Emparejar("USER", true);
-            Emparejar("Identificador", false);
+            ID();
         } else {
 
             RaiseError("USER", this.Actual.linea, this.Actual.columna);
