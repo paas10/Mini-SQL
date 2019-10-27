@@ -1,0 +1,96 @@
+package minisql;
+
+import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    public ArrayList<String> Errores = new ArrayList<String>();
+    private void Symbol s;
+    
+    public void syntax_error(Symbol cur_token){
+        java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) cur_token);
+        System.out.println("Linea " + (s.left+1) + ". Error: Simbolo no Reconocido:\t" + s.value
+                        + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (s.right+1) + "}\n");
+        SyntacticErrors.add("Linea " + (s.left+1) + ". Error: Simbolo no Reconocido:\t" + s.value
+                        + "\t{Columna Inicial:" + lexer.column + " Columna Final: " + (s.right+1) + "}\n");
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, ADMIRACION, PYC, IDENTIFICADOR, ERROR,
+    CONSTANTE_BOOLEANA, CONSTANTE_ENTERA, COMA, PUNTO, CORCHETE_APERTURA, DIVISION, MODULAR, LT, CONSTANTE_FLOTANTE,
+    CONSTANTE_CADENA, OPERADOR, ERROR_COMENTARIO, ERROR_CADENA, ELT, GT, EGT, ASIGNACION, COMPARACION, CORCHETES, 
+    PARENTESIS, LLAVES, ARROBA, NUMERAL, NUMERALES, CORCHETE_CIERRE, PARENTESIS_APERTURA, PARENTESIS_CIERRE, 
+    LLAVE_APERTURA, LLAVE_CIERRE, ADD, ALL, ALTER, AND, ANY, AS, ASC, AUTHORIZATION, BACKUP, BEGIN, BETWEEN, BREAK,
+    BROWSE, BULK, BY, CASCADE, CASE, CHECK, CHECKPOINT, CLOSE, CLUSTERED, COALESCE, COLLATE, COMPUTE, CONSTRAINT, 
+    CONTAINS, CONTAINSTABLE, CONTINUE, CONVERT, CREATE, CROSS, CURRENT, CURRENT_DATE, CURRENT_TIME, DBCC, DEALLOCATE,
+    DECLARE, CURRENT_TIMESTAMP, CURRENT_USER, CURSOR, DATABASE, COLUMN, COMMIT, DEFAULT, DELETE, DENY, DESC, END,
+    ERRLVL, ESCAPE, EXCEPT, EXEC, EXECUTE, EXISTS, EXIT, DISK, DISTINCT, DISTRIBUTED, DOUBLE, DROP, DUMP, ELSE,
+    HOLDLOCK, IDENTITY, IDENTITY_INSERT, IDENTITYCOL, IF, IN, INDEX, FREETEXTTABLE, FROM, FULL, FUNCTION, GOTO, GRANT,
+    EXTERNAL, FETCH, FILE, FILLFACTOR, FOR, FOREIGN, FREETEXT, GROUP, HAVING, INNER, INSERT, INTERSECT, INTO, IS, JOIN,
+    NOT, NULL, NULLIF, OF, OFF, OFFSETS, ON, OPEN, OPENDATASOURCE, KEY, KILL, LEFT, LIKE, LINENO, LOAD, MERGE, NATIONAL,
+    NOCHECK, NONCLUSTERED, OPENQUERY, OPENROWSET, READTEXT, RECONFIGURE, REFERENCES, REPLICATION, RESTORE, PLAN,
+    PRECISION, PRIMARY, PRINT, OVER, PERCENT, PIVOT, PROC, PROCEDURE, PUBLIC, RAISERROR, READ, OPENXML, OPTION, OR,
+    ORDER, OUTER, RESTRICT, RETURN, REVERT, REVOKE, RIGHT, ROLLBACK, ROWCOUNT, ROWGUIDCOL, SHUTDOWN, SOME, STATISTICS,
+    SYSTEM_USER, TABLE, TABLESAMPLE, RULE, SAVE, SCHEMA, SECURITYAUDIT, SELECT, SEMANTICKEYPHRASETABLE,
+    SEMANTICSIMILARITYDETAILSTABLE, SEMANTICSIMILARITYTABLE, SESSION_USER, SET, SETUSER, TEXTSIZE, THEN, TO, TOP, TRAN,
+    TRANSACTION, TRIGGER, TRUNCATE, VIEW, WAITFOR, WHEN, WHERE, UPDATE, UPDATETEXT, USE, USER, VALUES, VARYING,
+    TRY_CONVERT, TSEQUAL, UNION, UNIQUE, UNPIVOT, WHILE, WITH, WITHIN_GROUP, WRITETEXT, ABSOLUTE, ACTION, ADA, ALLOCATE,
+    ARE, ASSERTION, AT, AVG, BIT, BIT_LENGTH, BOTH, CASCADED, DEFERRED, DESCRIBE, DESCRIPTOR, DIAGNOSTICS, DISCONNECT,
+    DOMAIN, END_EXEC, EXCEPTION, EXTRACT, FALSE, FIRST, FLOAT, FORTRAN, CAST, CATALOG, CHAR, CHAR_LENGTH, CHARACTER,
+    CHARACTER_LENGTH, COLLATION, CONNECT, CONNECTION, CONSTRAINTS, CORRESPONDING, COUNT, DATE, DAY, INITIALLY, INPUT, 
+    INSENSITIVE, INT, INTEGER, INTERVAL, ISOLATION, LANGUAGE, LAST, LEADING, LEVEL, DECIMAL, DEFERRABLE, FOUND, GET, 
+    GLOBAL, GO, HOUR, IMMEDIATE, INCLUDE, INDICATOR, DEC, LOCAL, LOWER, MATCH, MAX, MIN, MINUTE, MODULE, MONTH, NAMES, 
+    NATURAL, NCHAR, NEXT, NO, NONE, NUMERIC, OVERLAPS, PAD, PARTIAL, OCTET_LENGTH, ONLY, OUTPUT, SESSION, SIZE, SMALLINT,
+    SPACE, SQL, SQLCA, PASCAL, POSITION, PREPARE, PRESERVE, PRIOR, PRIVILEGES, SQLCODE, SQLERROR, SQLSTATE, SQLWARNING,
+    SUBSTRING, SUM, REAL, RELATIVE, ROWS, SCROLL, SECOND, SECTION, TEMPORARY, TIME, TIMESTAMP, TIMEZONE_HOUR,
+    TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, TRANSLATION,
+    TRIM, TRUE, UNKNOWN, ZONE;
+
+non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2A, Object3, Object3A, Object4,
+    Object4A, IFE, VARIABLE, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
+    DropTableA, DropUser, DropDatabase, DropDatabaseA, DropView, DropViewA, DropIndex, DropIndexA, DropIndexB,
+    Truncate, Alias, AliasA, Expresion, ExpresionA, ExpresionB, ExpresionC, ExpresionD, ExpresionE, ExpresionF,
+    Not, Top, TopA, Expresiones, SearchCondition, SearchConditionA, Predicado, PredicadoA, PredicadoC, Where,
+    SelectColumns, SelectColumnsA, ColumnList, ColumnListA, ColumnListB, Select, SelectA, Having, Order, OrderA,
+    OrderB, OrderC, Group, GroupA, Insert, InsertInto, InsertColumnList, InsertExpresion, InsertExpresionA,
+    InsertExpresionB, InsertValores, InsertValoresA, Delete, FromDelete, DeleteA, DeleteB, DeleteC, Server,
+    Update, UpdateA, UpdateB, UpdateC, FromUpdate, FromSelect, FromSelectA, Join, Type, Outer, Create, CreateA,
+    CreateUser, CreateDB, CreateDBA, CreateDBB, Primary, FileSpecs, FileSpec, COLLATEDB, Filename, Optionals,
+    Optionals_A, Optional, Size, Size_A, Maxsize, Maxsize_A, Filegrowth, Filegrowth_A, CreateView, CreateIndex,
+    CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex, OptionalOn, CreateTable, FileGroup,
+    NFR, CNC, CNCA, ColumnDef, ColumnDefA, ColumnDefB, ColumnDefC, ColumnDefD, ColumnDefE, ColumnDefF, ColumnDefG,
+    ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE,
+    ColumnConstrF, ColumnConstG, ColumnConstrH, ColumnConstrI, TableConstr, TableConstrA, TableConstrB,
+    TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterUser,
+    AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
+    AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB, AlterTableDropC, AlterTableDropD, BEGINTRAN,
+    BEGINTRANA, BEGINTRANB, BEGINTRANC, SAVEPOINT, Name, NAMEA, TRANNAME, Commit, COMMITA, Rollback, ROLLBACKA,
+    Procedure, SP_Reservada, NumSP, ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3,
+    ProcOption, ProcOption1, ProcOption2, ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,
+    StmtSP2, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly, Type_Return, Data, Table, SCT, DType,
+    With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList, VariableLista, CursorDeclare, CursorDeclarea,
+    CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree, CursorDeclaref, CursorDeclareg, CursorOpen,
+    CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc, CursorFetchd, CursorFetche, CursorClose, 
+    CursorDealloc;
+
+start with Inicial;
+
+Inicial ::= INT
+;
+
+
+
+
+
+
+
+
+
+
+
+
