@@ -147,6 +147,7 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "OPTION" {return new Symbol(sym.OPTION,  yychar, yyline, yytext());}
 "OR" {return new Symbol(sym.OR,  yychar, yyline, yytext());}
 "ORDER" {return new Symbol(sym.ORDER,  yychar, yyline, yytext());}
+"OUT" {return new Symbol(sym.OUT,  yychar, yyline, yytext());}
 "OUTER" {return new Symbol(sym.OUTER,  yychar, yyline, yytext());}
 "OVER" {return new Symbol(sym.OVER,  yychar, yyline, yytext());}
 "PERCENT" {return new Symbol(sym.PERCENT,  yychar, yyline, yytext());}
@@ -344,8 +345,30 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "WRITE" {return new Symbol(sym.WRITE,  yychar, yyline, yytext());}
 "YEAR" {return new Symbol(sym.YEAR,  yychar, yyline, yytext());}
 "ZONE" {return new Symbol(sym.ZONE,  yychar, yyline, yytext());}
-
-
+"READONLY" {return new Symbol(sym.READONLY,  yychar, yyline, yytext());}
+"ENCRYPTION" {return new Symbol(sym.ENCRYPTION,  yychar, yyline, yytext());}
+"RETURNS" {return new Symbol(sym.RETURNS,  yychar, yyline, yytext());}
+"SCHEMABINDING" {return new Symbol(sym.SCHEMABINDING,  yychar, yyline, yytext());}
+"CALLED" {return new Symbol(sym.CALLED,  yychar, yyline, yytext());}
+"INLINE" {return new Symbol(sym.INLINE,  yychar, yyline, yytext());}
+"CALLER" {return new Symbol(sym.CALLER,  yychar, yyline, yytext());}
+"SELF" {return new Symbol(sym.SELF,  yychar, yyline, yytext());}
+"OWNER" {return new Symbol(sym.OWNER,  yychar, yyline, yytext());}
+"RECOMPILE" {return new Symbol(sym.RECOMPILE,  yychar, yyline, yytext());}
+"MARK" {return new Symbol(sym.MARK,  yychar, yyline, yytext());}
+"FORWARD_ONLY" {return new Symbol(sym.FORWARD_ONLY,  yychar, yyline, yytext());}
+"STATIC" {return new Symbol(sym.STATIC,  yychar, yyline, yytext());}
+"KEYSET" {return new Symbol(sym.KEYSET,  yychar, yyline, yytext());}
+"DYNAMIC" {return new Symbol(sym.DYNAMIC,  yychar, yyline, yytext());}
+"FAST_FORWARD" {return new Symbol(sym.FAST_FORWARD,  yychar, yyline, yytext());}
+"READ_ONLY" {return new Symbol(sym.READ_ONLY,  yychar, yyline, yytext());}
+"SCROLL_LOCKS" {return new Symbol(sym.SCROLL_LOCKS,  yychar, yyline, yytext());}
+"OPTIMISTIC" {return new Symbol(sym.OPTIMISTIC,  yychar, yyline, yytext());}
+"TYPE_WARNING" {return new Symbol(sym.TYPE_WARNING,  yychar, yyline, yytext());}
+"KB" {return new Symbol(sym.KB,  yychar, yyline, yytext());}
+"MB" {return new Symbol(sym.MB,  yychar, yyline, yytext());}
+"GB" {return new Symbol(sym.GB,  yychar, yyline, yytext());}
+"TB" {return new Symbol(sym.TB,  yychar, yyline, yytext());}
 
 [a-zA-Z]({LETRA} | {DIGITO})* {return new Symbol(sym.ERROR_COMENTARIO, yychar, yyline, yytext());}
 
