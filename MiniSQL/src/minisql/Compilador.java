@@ -47,8 +47,6 @@ public class Compilador extends javax.swing.JFrame {
     TokenAnalisis Actual;
     int Sentencia = 1;
     boolean ErrorSintactico = false;
-    // Error Sintactico Historico
-    boolean ESH = false;
 
     public Compilador() {
         ColaAnalisis = new LinkedList();
@@ -181,7 +179,225 @@ public class Compilador extends javax.swing.JFrame {
         //AnalizarTokens(ArchivoSQL, PathOut);
     }//GEN-LAST:event_btnPathActionPerformed
 
+    // Método que escribe el archivo .out y escribe en pantalla el analisis del archivo.
+    private void AnalizarTokens(File ArchivoSQL, String PathOut) {
+        if (ArchivoSQL == null) {
+            lblPath.setText("Debes seleccionar un archivo SQL válido");
+        } else {
+            lblPath.setText(ArchivoSQL.getPath());
+        }
 
+        try {
+            Reader reader = new BufferedReader(new FileReader(ArchivoSQL.getPath()));
+            Lexer lexer = new Lexer(reader);
+
+            List Lista = new List();
+
+            Token token;
+            token = lexer.yylex();
+            
+            // Variables para analizar si se debe analizar la expresion Sintacticamente
+            boolean flagError = false;
+            LinkedList ColaTemp = new LinkedList();
+            
+
+            while (token != null) {
+                TokenAnalisis tok;
+
+                switch (token) {
+                    case ERROR:
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: Caracter no Reconocido:\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Error: Caracter no Reconocido:\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                        flagError = true;
+                        break;
+
+                    case IDENTIFICADOR:
+                        // Si el identificador tiene mas de 31 caracteres lanza error.
+                        if (lexer.lexeme.length() > 31) {
+                            char[] cidentificador = lexer.lexeme.toCharArray();
+                            String identificador = "";
+
+                            for (int i = 0; i < 31; i++) {
+                                identificador += Character.toString(cidentificador[i]);
+                            }
+
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: " + "Identificador.lenght" + ":\t" + identificador
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Error: " + "Identificador.lenght" + ":\t" + identificador
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+
+                            flagError = true;
+
+                        } else {
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                            ColaTemp.offer(tok);
+                        }
+                        break;
+
+                    case ERROR_CADENA:
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: String sin Cierre :\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Error: String sin Cierre :\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                        
+                        flagError = true;
+                        break;
+
+                    case ERROR_COMENTARIO:
+
+                        char[] letras = lexer.lexeme.trim().toCharArray();
+
+                        if (!(letras[0] == '/' && letras[1] == '*' && letras[letras.length - 2] == '*' && letras[letras.length - 1] == '/')) {
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Error: Comentario sin Terminar :\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                            Lista.add("Linea " + (lexer.line + 1) + ". Error: Comentario sin Terminar :\t" + lexer.lexeme
+                                    + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                            flagError = true;
+                        }
+                        break;
+
+                    default:
+                        jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+                        Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                                + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
+
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                        ColaTemp.offer(tok);
+                        break;
+                }
+
+                token = lexer.yylex();
+                
+                // Si llegamos al final de la sentencia...
+                if (token == Token.PYC || token == Token.GO)
+                {
+                    // ... Y no hubo ningún error lexico ...
+                    if (!flagError)
+                    {
+                        // ... Se agrega el token final a la cola
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                        ColaTemp.offer(tok);
+
+                        // Se avanza una posicion más... 
+                        token = lexer.yylex();
+                        // ... Si hay otro final es porque debería de haber un GO despues de un ;
+                        if (token == Token.GO)
+                        {
+                            // Se agrega el otro final a la cola de analisis temporal
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                            ColaTemp.offer(tok);
+                            token = lexer.yylex();
+                        }
+                        
+                        // Como no hubo error se agrega toda la sentencia guardada en ColaTemp a la ColaAnalisis
+                        while(ColaTemp.peek() != null)
+                            ColaAnalisis.offer(ColaTemp.poll());
+                    }
+                    // ... Si se encontró un error en el proceso se descarta todo lo guardado en la ColaTemp
+                    else
+                    {
+                        token = lexer.yylex();
+                        // Se busca si venía el GO después del PYC
+                        if (token == Token.GO)
+                            token = lexer.yylex();
+                        
+                        // Se descarta todo
+                        while(ColaTemp.peek() != null)
+                            ColaTemp.poll();
+                        
+                        // Se resetea la flagError
+                        flagError = false;
+                    }
+                }
+
+            }
+
+            // FINAL DEL ANALISIS LEXICO
+            jtaResultado.append("FIN DE LECTURA");
+            Lista.add("FIN DE LECTURA");
+
+            // ESCRITURA DEL ARCHIVO .OUT
+            EscrituraOutLexico(PathOut, Lista);
+
+            /*
+            this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+
+            while (this.ColaAnalisis.peek() != null) {
+                if (Actual.token == Token.InicialA && !ErrorSintactico)
+                {
+                    Inicial();
+                }
+                else if (Actual.token != Token.InicialA && ErrorSintactico)
+                {
+                    // Consumo todos los elementos que no sean Final (; o GO)
+                    while (Actual.token != Token.Final)
+                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    
+                    // Consumo un elemento más para verificar si es otro Final, de lo contrario debería de haber
+                    // comenzado otra sentencia
+                    // Si es otro final, consumo el segundo final para que comience otra sentencia
+                    this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    if (Actual.token == Token.Final)
+                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
+                    
+                    // Debería de ser el inicio de otra sentencia, por lo que se convierte en FALSE la Flag de
+                    // Error sintactico y se manda a analizar nuevamente desde incial.
+                    ErrorSintactico = false;
+                    Inicial();
+                }
+                else if (Actual.token == Token.InicialA && ErrorSintactico)
+                {
+                    // Se asume que hubo un error en la sentencia pasada y que se logró consumir la sentencia completa
+                    // Se procede a analizar la siguiente sentencia, sin embargo se cambia nuevamente la Flag de
+                    // error sintactico a FALSE
+                    ErrorSintactico = false;
+                    Inicial();
+                }
+            }
+            */
+            
+            jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    private void EscrituraOutLexico(String PathOut, List Lista) throws IOException
+    {
+        // Escritor del archivo de salida.
+        File ArchivoOut = new File(PathOut);
+        FileWriter writer = new FileWriter(ArchivoOut);
+        PrintWriter pw = new PrintWriter(ArchivoOut);
+
+        pw.write(Lista.getItem(0));
+
+        int cont = 1;
+
+        while (!Lista.getItem(cont).equals("FIN DE LECTURA")) {
+            pw.append(Lista.getItem(cont));
+            cont++;
+        }
+
+        pw.append("FIN DE LECTURA");
+
+        pw.close();
+        writer.close();
+    }
+
+    
+    
     /**
      * @param args the command line arguments
      */
