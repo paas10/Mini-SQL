@@ -180,11 +180,15 @@ public class Compilador extends javax.swing.JFrame {
 
         String PathOut = Path + ".out";
 
-        AnalizarTokens(ArchivoSQL, PathOut);
+        try {
+            AnalizarTokens(ArchivoSQL, PathOut);
+        } catch (Exception ex) {
+            Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPathActionPerformed
 
     // Método que escribe el archivo .out y escribe en pantalla el analisis del archivo.
-    private void AnalizarTokens(File ArchivoSQL, String PathOut) {
+    private void AnalizarTokens(File ArchivoSQL, String PathOut) throws Exception {
         if (ArchivoSQL == null) {
             lblPath.setText("Debes seleccionar un archivo SQL válido");
         } else {
@@ -331,7 +335,7 @@ public class Compilador extends javax.swing.JFrame {
             // ESCRITURA DEL ARCHIVO .OUT
             EscrituraOutLexico(PathOut, Lista);
             ArchivoPrevioAnalisisLexico(ColaAnalisis);
-            //AnalisisSintactico();
+            AnalisisSintactico();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
@@ -378,7 +382,7 @@ public class Compilador extends javax.swing.JFrame {
                 
         TokenAnalisis Tok;
 
-        while (this.ColaAnalisis.peek() != null) 
+        while (ColaAnalisis.peek() != null) 
         {
             Tok = (TokenAnalisis) ColaAnalisis.poll();
             columnai = Tok.columnai;
@@ -421,28 +425,26 @@ public class Compilador extends javax.swing.JFrame {
         writer.close();
     }
     
-    private void AnalisisSintactico () throws IOException
+    private void AnalisisSintactico () throws IOException, Exception
     {
         String PathArchivo = "C:\\Users\\Admin\\Desktop\\PrevioSintactico.txt";
         
-        String Texto = new String(Files.readAllBytes(Paths.get(PathArchivo)));
-        //Sintax s = new Sintax(new minisql.LexerCup(new StringReader(Texto)));
+        LinkedList<String> ErroresSintacticos = null;
         
-        try
+        String Texto = new String(Files.readAllBytes(Paths.get(PathArchivo)));
+        Sintax s = new Sintax(new minisql.LexerCup(new StringReader(Texto)));
+        
+        s.parse();
+        
+        //Se agrega la lista de errores sintacticos
+        ErroresSintacticos = s.Errores;
+        
+        while (ErroresSintacticos.peek() != null)
         {
-            //s.parse();
-            jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+            jtaResultado1.append(ErroresSintacticos.removeFirst());
         }
-        catch(Exception E)
-        {
-            //Symbol sym = s.getS();
-            
-            //String valor = (String) sym.value;
-            //int longitud = valor.length();
-            
-            //jtaResultado1.append("Linea " + (sym.right + 1) + "Error de sintaxis: Simbolo no reconocido" + 
-            //        sym.value + "\t\tColumna Inicial: " + (sym.left + 1) + " - Columna Final: " + (sym.left + longitud));
-        }
+        
+        jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
     }
     
     /**

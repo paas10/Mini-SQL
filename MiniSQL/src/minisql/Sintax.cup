@@ -1,22 +1,121 @@
 package minisql;
 
-import java.util.ArrayList;
 import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java_cup.runtime.virtual_parse_stack;
+import java.lang.reflect.Field;
 
 parser code
 {:
-    public ArrayList<String> Errores = new ArrayList<String>();
+    public LinkedList<String> Errores = new LinkedList<String>();
     private Symbol s;
-    
-    public void syntax_error(Symbol s){
-        this.s = s;
 
-        java_cup.runtime.Symbol symbol = ((java_cup.runtime.Symbol) s);
-        System.out.println("Linea " + (symbol.left+1) + ". Error: Simbolo no Reconocido:\t" + symbol.value
-                        + "\t{Columna Inicial:" + (symbol.right+1) + " Columna Final: " + (symbol.right+1) + "}\n");
-        Errores.add("Linea " + (symbol.left+1) + ". Error: Simbolo no Reconocido:\t" + symbol.value
-                        + "\t{Columna Inicial:" + (symbol.right+1) + " Columna Final: " + (symbol.right+1) + "}\n");
+    public final Class getSymbolContainer() {
+        return sym.class;
     }
+    
+    public void syntax_error(Symbol cur_token){
+        java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) cur_token);
+        List<Integer> ids = expected_token_ids();
+        LinkedList<String> list = new LinkedList<String>();
+
+	    for (Integer expected : ids) {
+		    list.add(symbl_name_from_id(expected));
+            list.add("    ");
+        }
+        
+        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido:\t" + s.value + "\t Columna Inicial:" + (s.left+1) + "\tSe esperaba: " + list);
+    }
+
+    public void unrecovered_syntax_error(Symbol cur_token){
+        java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) cur_token);
+        List<Integer> ids = expected_token_ids();
+        LinkedList<String> list = new LinkedList<String>();
+
+	    for (Integer expected : ids) {
+		    list.add(symbl_name_from_id(expected));
+            list.add("    ");
+        }
+        
+        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido:\t" + s.value + "\t Columna Inicial:" + (s.left+1) + "\tSe esperaba: " + list);
+    }
+
+    // En base al numero obtenido de lookahead lo convierte al token esperado
+    public String symbl_name_from_id(int id) {
+	    Field[] fields = getSymbolContainer().getFields();
+	    for(Field f : fields)
+        {
+            try {
+			    if (f.getInt(null)==id)
+			    return f.getName();
+		    } catch (IllegalArgumentException e) {
+			    //e.printStackTrace();
+		    } catch (IllegalAccessException e) {
+			    //e.printStackTrace();
+		    }
+	    }
+
+	    return "Simbolo Invalido id";
+    }
+   
+    // Se obtiene el lookahead (numero)
+    public List<Integer> expected_token_ids() {
+        List<Integer> ret = new LinkedList<Integer>();
+	    int parse_state = ((Symbol)stack.peek()).parse_state ;
+	    short[] row = action_tab[parse_state];
+	    for (int i = 0; i<row.length; i+=2){
+		    if (row[i]==-1) continue;
+		    if (!validate_expected_symbol(row[i])) continue;
+		    ret.add(new Integer(row[i]));
+	    }
+	    return ret;
+    }
+
+    // Para seguir analizando despues de un error
+    protected static final int _error_sync_size(){
+        return 1;
+    }
+
+    // Verifica la existencia del simbolo esperado
+    private boolean validate_expected_symbol(int id){
+	    short lhs,rhs_size;
+        int act;
+
+	    try {
+		    virtual_parse_stack vstack = new virtual_parse_stack(stack);
+		    for (;;)
+		    {
+			    act = get_action(vstack.top(), id);
+
+			    if (act == 0) return false;
+
+			    if (act > 0)
+			    {
+				    vstack.push(act-1);
+
+				    if (!advance_lookahead()) return true;
+			    }
+			    else
+			    {
+				    if ((-act)-1 == start_production())  return true;
+
+				    lhs = production_tab[(-act)-1][0];
+				    rhs_size = production_tab[(-act)-1][1];
+				    for (int i = 0; i < rhs_size; i++) vstack.pop();
+
+				    vstack.push(get_reduce(vstack.top(), lhs));
+			    }
+		    }
+
+	    } catch (Exception e) {
+		    e.printStackTrace();
+	    }
+
+	    return true;
+    }
+
 
 :};
 
@@ -64,8 +163,8 @@ non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2
     CreateUser, CreateDB, CreateDBA, CreateDBB, Primary, FileSpecs, FileSpec, COLLATEDB, Filename, Optionals,
     Optionals_A, Optional, Size, Size_A, Maxsize, Maxsize_A, Filegrowth, Filegrowth_A, CreateView, CreateIndex,
     CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex, OptionalOn, CreateTable, FileGroup,
-    NFR, CNC, CNCA, ColumnDef, ColumnDefA, ColumnDefB, ColumnDefC, ColumnDefD, ColumnDefE, ColumnDefF, ColumnDefG,
-    ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE,
+    NFR, CNC, CNCA, ColumnDef, ColumnDefZ, ColumnDefY, ColumnDefX, ColumnDefW, ColumnDefV, ColumnDefA, ColumnDefD,
+    ColumnDefE, ColumnDefF, ColumnDefG, ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE,
     ColumnConstrF, ColumnConstrG, ColumnConstrH, ColumnConstrI, TableConstr, TableConstrA, TableConstrB,
     TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterDatabase, 
     AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
@@ -77,8 +176,293 @@ non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2
     With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList, VariableLista, CursorDeclare, CursorDeclarea,
     CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree, CursorDeclaref, CursorDeclareg, CursorOpen,
     CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc, CursorFetchd, CursorFetche, CursorClose, 
-    CursorDealloc, OperadoresBooleanos;
+    CursorDealloc, OperadoresBooleanos, NFR1, NFR2;
 
 start with Inicial;
 
-Inicial ::= INT;
+Inicial ::= InicialA Final Inicial | error Final Inicial |;
+InicialA ::= DML | DDL | TCL | TSQL;
+
+DML ::= Select | Insert | Delete | Update;
+DDL ::= Create | Alter | Drop | Truncate;
+TCL ::= BeginTran | Rollback | Commit | SavePoint;
+TSQL ::= CursorDeclare;
+
+Final ::= PYC | GO;
+
+ID ::= IDENTIFICADOR | CORCHETE_APERTURA IDENTIFICADOR CORCHETE_CIERRE;
+
+Object2 ::= ID Object2A;
+Object2A ::= PUNTO ID |;
+Object3 ::= ID Object3A;
+Object3A ::= PUNTO Object2 |;
+Object4 ::= ID Object4A;
+Object4A ::= PUNTO Object3 |;
+
+IFE ::= IF EXISTS |;
+
+Variable ::= ARROBA IDENTIFICADOR;
+
+Tipo_dato ::= Tipo_datoD Tipo_datoB;
+Tipo_datoD ::= Tipo_datoA | CORCHETE_APERTURA Tipo_datoA CORCHETE_CIERRE;
+Tipo_datoA ::= VARCHAR | INTEGER |FLOAT | DATE | BIT | DOUBLE | CHAR | CURSOR | NCHAR | REAL | TIME | INT | DECIMAL | SMALLINT | NUMERIC;
+Tipo_datoB ::= PARENTESIS_APERTURA CONSTANTE_ENTERA Tipo_datoC PARENTESIS_CIERRE |;
+Tipo_datoC ::= COMA CONSTANTE_ENTERA |;
+
+Drop ::= DROP DropA;
+DropA ::= DropTable | DropUser | DropDatabase | DropView | DropIndex;
+DropTable ::= TABLE IFE Object3 DropTableA;
+DropTableA ::= COMA Object3 DropTableA |;
+DropUser ::= USER IFE ID;
+DropDatabase ::= DATABASE IFE ID DropDatabaseA;
+DropDatabaseA ::= COMA ID DropDatabaseA |;
+DropView ::= VIEW IFE Object2 DropViewA;
+DropViewA ::= COMA Object2 DropViewA |;
+DropIndex ::= INDEX IFE DropIndexA DropIndexB;
+DropIndexA ::= ID ON Object3;
+DropIndexB ::= COMA DropIndexA DropIndexB |;
+
+Truncate ::= TRUNCATE TABLE Object3;
+Alias ::= AS AliasA | AliasA |;
+AliasA ::= ID | CONSTANTE_CADENA;
+
+Expresion ::= ExpresionB ExpresionA;
+ExpresionA ::= SUMA ExpresionB ExpresionA | RESTA ExpresionB ExpresionA |;
+ExpresionB ::= ExpresionD ExpresionC;
+ExpresionC ::= MULTIPLICACION ExpresionD ExpresionC | DIVISION ExpresionD ExpresionC |;
+ExpresionD ::= PARENTESIS_APERTURA Expresion PredicadoC PARENTESIS_CIERRE | ExpresionE;
+ExpresionE ::= Object4 | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL 
+    | SUM PARENTESIS_APERTURA ExpresionF
+    | AVG PARENTESIS_APERTURA ExpresionF
+    | MIN PARENTESIS_APERTURA ExpresionF
+    | MAX PARENTESIS_APERTURA ExpresionF
+    | COUNT PARENTESIS_APERTURA ExpresionF;
+ExpresionF ::= Object4 PARENTESIS_CIERRE
+    | CONSTANTE_ENTERA PARENTESIS_CIERRE
+    | MULTIPLICACION PARENTESIS_CIERRE;
+
+Not ::= NOT |;
+
+Top ::= TOP PARENTESIS_APERTURA CONSTANTE_ENTERA PARENTESIS_CIERRE TopA |;
+TopA ::= PERCENT |;
+
+Expresiones ::= COMA Expresion Expresiones |;
+SearchCondition ::= Not Predicado SearchConditionA;
+
+SearchConditionA ::= AND SearchCondition|OR SearchCondition|;
+
+Predicado ::= Expresion PredicadoA;
+OperadoresBooleanos ::=ASIGNACION| DIFERENCIA | GT | EGT | LT | ELT;
+PredicadoA ::= OperadoresBooleanos Expresion| IS Not NULL | Not PredicadoC;
+PredicadoC ::= IN PARENTESIS_APERTURA Expresion Expresiones PARENTESIS_CIERRE
+    | BETWEEN Expresion AND Expresion
+    | LIKE Expresion;
+
+Where ::= WHERE SearchCondition |;
+
+SelectColumns ::= Expresion Alias SelectColumnsA| MULTIPLICACION SelectColumnsA;
+SelectColumnsA ::= COMA Expresion Alias SelectColumnsA |;
+
+ColumnList ::= PARENTESIS_APERTURA ColumnListA PARENTESIS_CIERRE;
+ColumnListA ::= ID ColumnListB;
+ColumnListB ::= COMA ID ColumnListB |;
+
+Select ::= SELECT SelectA Top SelectColumns FromSelect Where Group Having Order;
+SelectA ::= ALL | DISTINCT |;
+
+Having ::= HAVING SearchCondition |;
+
+Order ::= ORDER BY Expresion OrderA OrderB OrderC |;
+OrderA ::= COLLATE ID |;
+OrderB ::= ASC | DESC |;
+OrderC ::= Expresion OrderA OrderB |;
+
+Group ::= GROUP BY Expresion GroupA |;
+GroupA ::= COMA Expresion GroupA |;
+
+Insert ::= INSERT Top InsertInto Object3 InsertColumnList InsertValores;
+InsertInto ::= INTO |;
+InsertColumnList ::= ColumnList |;
+InsertExpresion ::= InsertExpresionA InsertExpresionB;
+InsertExpresionA ::= DEFAULT | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
+InsertExpresionB ::= COMA InsertExpresionA InsertExpresionB |;
+InsertValores ::= VALUES PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA | DEFAULT VALUES;
+InsertValoresA ::= COMA PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA |;
+
+Delete ::= DELETE Top FromDelete DeleteA;
+FromDelete ::= FROM |;
+DeleteA ::= OPENQUERY Server | Object3 DeleteB Where;
+DeleteB ::= FROM Object3 DeleteC;
+DeleteC ::= COMA Object3 DeleteC |;
+
+Server ::= PARENTESIS_APERTURA ID COMA CONSTANTE_ENTERA PARENTESIS_CIERRE;
+
+Update ::= UPDATE Top Object3 SET UpdateA FromUpdate Where;
+UpdateA ::= ID ASIGNACION UpdateB UpdateC;
+UpdateB ::= DEFAULT | Expresion;
+UpdateC ::= COMA UpdateA|;
+
+FromUpdate ::= FROM Object3 DeleteC |;
+FromSelect ::= FROM Object3 Alias Join FromSelectA |;
+FromSelectA ::= COMA Object3 Alias Join |;
+
+Join ::= Type JOIN Object3 Alias ON SearchCondition Join |;
+Type ::= INNER | RIGHT Outer | LEFT Outer | FULL Outer |;
+Outer ::= OUTER |;
+
+Create ::= CREATE CreateA;
+CreateA ::= CreateTable | CreateDB | CreateIndex | CreateUser | CreateView | Procedure | Function;
+CreateUser ::= USER IDENTIFICADOR;
+CreateDB ::= DATABASE ID CreateDBA;
+CreateDBA ::= CreateDBB COLLATEDB;
+CreateDBB ::= ON Primary FileSpecs |;
+
+Primary ::= PRIMARY |;
+FileSpecs ::= FileSpec COMA FileSpecs | FileSpec;
+FileSpec ::= PARENTESIS_APERTURA NAME  ASIGNACION CONSTANTE_CADENA COMA FILENAME ASIGNACION CONSTANTE_CADENA Optionals PARENTESIS_CIERRE;
+COLLATEDB ::= COLLATE ID |;
+
+Optionals ::= COMA Optional Optionals|;
+Optional ::= Size | Maxsize | Filegrowth;
+
+Size ::= SIZE ASIGNACION CONSTANTE_ENTERA Size_A;
+Size_A ::= KB| MB | GB | TB;
+
+Maxsize ::= MAXSIZE ASIGNACION Maxsize_A;
+Maxsize_A ::= CONSTANTE_ENTERA Size_A | UNLIMITED;
+
+Filegrowth ::= FILEGROWTH ASIGNACION CONSTANTE_ENTERA Filegrowth_A;
+Filegrowth_A ::= Size_A | MODULAR |;
+
+CreateView ::= VIEW Object2 AS Select;
+CreateIndex ::= CreateIndexA ColumnConstrC INDEX ID ON Object3 ColumnIndex IncludeIndex Where OptionalOn;
+CreateIndexA ::= UNIQUE|;
+
+ColumnIndex ::= PARENTESIS_APERTURA ColumnIndexA PARENTESIS_CIERRE;
+ColumnIndexA ::= ID OrderB ColumnIndexB;
+ColumnIndexB ::= COMA ID OrderB ColumnIndexB |;
+
+IncludeIndex ::= INCLUDE ColumnList |;
+OptionalOn ::= ON ID PARENTESIS_APERTURA ID PARENTESIS_CIERRE |;
+CreateTable ::= TABLE Object3 PARENTESIS_APERTURA CNC CNCA PARENTESIS_CIERRE FileGroup;
+FileGroup ::= ON PRIMARY|;
+
+NFR ::= NOT NFR1|;
+NFR1 ::= FOR REPLICATION NFR2| NULL;
+NFR2 ::= NOT ColumnDefG|;
+
+CNC ::= ColumnDef | TableConstr | TableIndex;
+CNCA ::= COMA CNC CNCA |;
+
+ColumnDef ::= ID Tipo_dato ColumnDefA ColumnDefZ;
+ColumnDefZ ::= CONSTRAINT ID ColumnDefY|ColumnDefY|;
+ColumnDefY ::= DEFAULT ColumnDefD ColumnDefE NFR ColumnDefH ColumnConstr|IDENTITY ColumnDefF NFR ColumnDefH ColumnConstr|ColumnDefX ColumnDefW ColumnDefH ColumnConstr|ROWGUIDCOL ColumnConstr|ColumnConstrB ColumnConstr;
+ColumnDefX ::= NOT|;
+ColumnDefW ::= NULL|FOR REPLICATION ColumnDefV;
+ColumnDefV ::= NOT NULL| NULL|;
+ColumnDefA ::= COLLATE ID |;
+ColumnDefD ::= CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL;
+ColumnDefE ::= IDENTITY ColumnDefF |;
+ColumnDefF ::= PARENTESIS_APERTURA CONSTANTE_ENTERA COMA CONSTANTE_ENTERA PARENTESIS_CIERRE |;
+ColumnDefG ::= NULL|;
+ColumnDefH ::= ROWGUIDCOL |;
+
+ColumnConstr ::= ColumnConstrA ColumnConstrB ColumnConstr |;
+ColumnConstrA ::= CONSTRAINT ID |;
+ColumnConstrB ::= PRIMARY KEY ColumnConstrC 
+    | UNIQUE ColumnConstrC
+    | ColumnConstrD REFERENCES Object2 ColumnConstrE ColumnConstrF NFR
+    | CHECK NFR PARENTESIS_APERTURA SearchCondition PARENTESIS_CIERRE;
+ColumnConstrC ::= CLUSTERED | NONCLUSTERED |;
+ColumnConstrD ::= FOREIGN KEY |;
+ColumnConstrE ::= PARENTESIS_APERTURA ID PARENTESIS_CIERRE |;
+ColumnConstrF ::= ON ColumnConstrG ColumnConstrF|;
+ColumnConstrG ::= DELETE ColumnConstrI|UPDATE ColumnConstrI;
+ColumnConstrH ::= NULL | DEFAULT;
+ColumnConstrI ::= CASCADE | SET ColumnConstrH;
+
+TableConstr ::= ColumnConstrA TableConstrA;
+TableConstrA ::= PRIMARY KEY ColumnConstrC TableConstrB
+    | UNIQUE ColumnConstrC TableConstrB
+    | FOREIGN KEY TableConstrD REFERENCES Object2 ColumnConstrE ColumnConstrF NFR
+    | CHECK NFR PARENTESIS_APERTURA SearchCondition PARENTESIS_CIERRE;
+TableConstrB ::= PARENTESIS_APERTURA ID OrderB TableConstrC PARENTESIS_CIERRE;
+TableConstrC ::= COMA ID OrderB TableConstrC |;
+TableConstrD ::= PARENTESIS_APERTURA ID TableConstrE PARENTESIS_CIERRE;
+TableConstrE ::= COMA ID TableConstrE |;
+
+TableIndex ::= INDEX ID ColumnConstrC TableConstrB;
+
+Alter ::= ALTER AlterA;
+AlterA ::= AlterTable | AlterUser | AlterDatabase | AlterView | Procedure | Function;
+AlterDatabase ::= DATABASE AlterDBA AlterDBB;
+AlterDBA ::= ID | CURRENT;
+AlterDBB ::= COLLATE ID | SET ROLLBACK IMMEDIATE;
+AlterUser ::= USER ID;
+AlterView  ::= VIEW Object2 AlterViewA AS Select;
+AlterViewA ::= ColumnList |;
+AlterTable ::= TABLE Object3 AlterTableA;
+AlterTableA ::= AlterColumn| ADD CNC CNCA| AlterTableDrop;
+AlterColumn ::= ALTER COLUMN ID AlterColumnC;
+AlterColumnC ::= AlterColumnA | AlterColumnD AlterColumnE;
+AlterColumnA ::= Tipo_dato ColumnDefA ColumnDefG;
+AlterColumnD ::= ADD | DROP;
+AlterColumnE ::= ROWGUIDCOL | NOT FOR REPLICATION;
+AlterTableDrop ::= DROP AlterTableDropA AlterTableDropC;
+AlterTableDropA ::= AlterTableDropB IFE ID | COLUMN IFE ID;
+AlterTableDropB ::= CONSTRAINT |;
+AlterTableDropC ::= COMA AlterTableDropA AlterTableDropC |;
+
+BeginTran ::= BEGIN TranName BeginTranA;
+BeginTranA ::= Name BeginTranB |;
+BeginTranB ::= WITH MARK BeginTranC |;
+BeginTranC ::= CONSTANTE_CADENA|;
+
+SavePoint ::= SAVE TranName Name;
+
+Name ::= ID | Variable;
+NameA ::= ID | Variable |;
+
+TranName ::= TRAN | TRANSACTION;
+
+Commit ::= COMMIT CommitA;
+CommitA ::= TranName NameA |;
+
+Rollback ::= ROLLBACK RollbackA;
+RollbackA ::= TranName NameA |;
+
+Procedure ::= OrAlter SP_Reservada Object2 NumSP ParamsSP ProcOption ReplicationSP AS StartSP;
+SP_Reservada ::=  PROC | PROCEDURE;
+NumSP ::= PYC INT |;
+
+ParamsSP ::= ParamsA_SP |;
+ParamsA_SP ::= Variable TipoD_SP ParamsB_SP;
+ParamsB_SP ::= COMA ParamsA_SP |;
+
+TipoD_SP ::= Tipo_datoA TipoD_SP1 TipoD_SP2
+    | CURSOR VARYING TipoD_SP3
+    | ID READONLY;
+TipoD_SP1 ::=ASIGNACION DEFAULT |;
+TipoD_SP2 ::= TipoD_SP3 |;
+TipoD_SP3 ::= OUT | OUTPUT;
+
+ProcOption ::= WITH ProcOption1 |;
+ProcOption1 ::= ProcOption2 ProcOptionRec;
+ProcOption2 ::= ENCRYPTION | RECOMPILE | ClauseExec AS Clause;
+
+ClauseExec ::= EXECUTE | EXEC;
+ProcOptionRec ::= COMA ProcOption1 |;
+Clause ::= CALLER | SELF | OWNER | ID;
+ReplicationSP ::= FOR REPLICATION |;
+StartSP ::= BEGIN StmtSP END | StmtSP;
+StmtSP ::= DML Final StmtSP1;
+StmtSP1 ::= DML Final StmtSP2 |;
+StmtSP2 ::= DML Final |;
+CursorDeclare ::= DECLARE ID CURSOR CursorDeclarea CursorDeclareb CursorDeclarec CursorDeclared CursorDeclaree FOR Select CursorDeclaref;
+CursorDeclarea ::= LOCAL|GLOBAL|;
+CursorDeclareb ::= SCROLL|FORWARD_ONLY|;
+CursorDeclarec ::= STATIC|KEYSET|DYNAMIC|FAST_FORWARD|;
+CursorDeclared ::= READ_ONLY|SCROLL_LOCKS|OPTIMISTIC|;
+CursorDeclaree ::= TYPE_WARNING|;
+CursorDeclaref ::= FOR UPDATE CursorDeclareg|;
+CursorDeclareg ::= OF ColumnListA|;
