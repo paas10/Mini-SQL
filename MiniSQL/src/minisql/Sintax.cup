@@ -18,12 +18,6 @@ parser code
                         + "\t{Columna Inicial:" + (symbol.right+1) + " Columna Final: " + (symbol.right+1) + "}\n");
     }
 
-    
-    /*
-    public Symbol getS(){
-        return this.s;
-    }
-    */
 :};
 
 terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, ADMIRACION, PYC, IDENTIFICADOR, ERROR,
@@ -49,17 +43,17 @@ terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, AD
     DOMAIN, END_EXEC, EXCEPTION, EXTRACT, FALSE, FIRST, FLOAT, FORTRAN, CAST, CATALOG, CHAR, CHAR_LENGTH, CHARACTER,
     CHARACTER_LENGTH, COLLATION, CONNECT, CONNECTION, CONSTRAINTS, CORRESPONDING, COUNT, DATE, DAY, INITIALLY, INPUT, 
     INSENSITIVE, INT, INTEGER, INTERVAL, ISOLATION, LANGUAGE, LAST, LEADING, LEVEL, DECIMAL, DEFERRABLE, FOUND, GET, 
-    GLOBAL, GO, HOUR, IMMEDIATE, INCLUDE, INDICATOR, DEC, LOCAL, LOWER, MATCH, MAX, MIN, MINUTE, MODULE, MONTH, NAMES, 
-    NATURAL, NCHAR, NEXT, NO, NONE, NUMERIC, OVERLAPS, PAD, PARTIAL, OCTET_LENGTH, ONLY, OUTPUT, SESSION, SIZE, SMALLINT,
-    SPACE, SQL, SQLCA, PASCAL, POSITION, PREPARE, PRESERVE, PRIOR, PRIVILEGES, SQLCODE, SQLERROR, SQLSTATE, SQLWARNING,
-    SUBSTRING, SUM, REAL, RELATIVE, ROWS, SCROLL, SECOND, SECTION, TEMPORARY, TIME, TIMESTAMP, TIMEZONE_HOUR,
+    GLOBAL, GO, HOUR, IMMEDIATE, INCLUDE, INDICATOR, DEC, LOCAL, LOWER, MATCH, MAX, MIN, MINUTE, MODULE, MONTH, NAME, NAMES, 
+    FILENAME, NATURAL, NCHAR, NEXT, NO, NONE, NUMERIC, OVERLAPS, PAD, PARTIAL, OCTET_LENGTH, ONLY, OUTPUT, SESSION, SIZE,
+    SMALLINT, SPACE, SQL, SQLCA, PASCAL, POSITION, PREPARE, PRESERVE, PRIOR, PRIVILEGES, SQLCODE, SQLERROR, SQLSTATE,
+    SQLWARNING, SUBSTRING, SUM, REAL, RELATIVE, ROWS, SCROLL, SECOND, SECTION, TEMPORARY, TIME, TIMESTAMP, TIMEZONE_HOUR,
     TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, TRANSLATION,
     TRIM, TRUE, UNKNOWN, ZONE, READONLY, ENCRYPTION, RETURNS, SCHEMABINDING, CALLED, INLINE, CALLER, SELF, OWNER, RECOMPILE,
-    MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, KB, MB, GB,
-    TB;
+    MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, MAXSIZE,
+    UNLIMITED, FILEGROWTH, KB, MB, GB, TB;
 
 non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2A, Object3, Object3A, Object4,
-    Object4A, IFE, VARIABLE, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
+    Object4A, IFE, Variable, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
     DropTableA, DropUser, DropDatabase, DropDatabaseA, DropView, DropViewA, DropIndex, DropIndexA, DropIndexB,
     Truncate, Alias, AliasA, Expresion, ExpresionA, ExpresionB, ExpresionC, ExpresionD, ExpresionE, ExpresionF,
     Not, Top, TopA, Expresiones, SearchCondition, SearchConditionA, Predicado, PredicadoA, PredicadoC, Where,
@@ -72,32 +66,19 @@ non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2
     CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex, OptionalOn, CreateTable, FileGroup,
     NFR, CNC, CNCA, ColumnDef, ColumnDefA, ColumnDefB, ColumnDefC, ColumnDefD, ColumnDefE, ColumnDefF, ColumnDefG,
     ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE,
-    ColumnConstrF, ColumnConstG, ColumnConstrH, ColumnConstrI, TableConstr, TableConstrA, TableConstrB,
-    TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterUser,
-    AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
-    AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB, AlterTableDropC, AlterTableDropD, BEGINTRAN,
-    BEGINTRANA, BEGINTRANB, BEGINTRANC, SAVEPOINT, Name, NAMEA, TRANNAME, Commit, COMMITA, Rollback, ROLLBACKA,
+    ColumnConstrF, ColumnConstrG, ColumnConstrH, ColumnConstrI, TableConstr, TableConstrA, TableConstrB,
+    TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterDatabase, 
+    AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
+    AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB, AlterTableDropC, AlterTableDropD, BeginTran,
+    BeginTranA, BeginTranB, BeginTranC, SavePoint, Name, NameA, TranName, Commit, CommitA, Rollback, RollbackA,
     Procedure, SP_Reservada, NumSP, ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3,
     ProcOption, ProcOption1, ProcOption2, ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,
     StmtSP2, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly, Type_Return, Data, Table, SCT, DType,
     With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList, VariableLista, CursorDeclare, CursorDeclarea,
     CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree, CursorDeclaref, CursorDeclareg, CursorOpen,
     CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc, CursorFetchd, CursorFetche, CursorClose, 
-    CursorDealloc;
+    CursorDealloc, OperadoresBooleanos;
 
 start with Inicial;
 
-Inicial ::= INT
-;
-
-
-
-
-
-
-
-
-
-
-
-
+Inicial ::= INT;

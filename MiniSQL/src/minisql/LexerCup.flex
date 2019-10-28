@@ -287,7 +287,9 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "MINUTE" {return new Symbol(sym.MINUTE,  yychar, yyline, yytext());}
 "MODULE" {return new Symbol(sym.MODULE,  yychar, yyline, yytext());}
 "MONTH" {return new Symbol(sym.MONTH,  yychar, yyline, yytext());}
+"NAME" {return new Symbol(sym.NAME,  yychar, yyline, yytext());}
 "NAMES" {return new Symbol(sym.NAMES,  yychar, yyline, yytext());}
+"FILENAME" {return new Symbol(sym.FILENAME,  yychar, yyline, yytext());}
 "NATURAL" {return new Symbol(sym.NATURAL,  yychar, yyline, yytext());}
 "NCHAR" {return new Symbol(sym.NCHAR,  yychar, yyline, yytext());}
 "NEXT" {return new Symbol(sym.NEXT,  yychar, yyline, yytext());}
@@ -365,6 +367,9 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "SCROLL_LOCKS" {return new Symbol(sym.SCROLL_LOCKS,  yychar, yyline, yytext());}
 "OPTIMISTIC" {return new Symbol(sym.OPTIMISTIC,  yychar, yyline, yytext());}
 "TYPE_WARNING" {return new Symbol(sym.TYPE_WARNING,  yychar, yyline, yytext());}
+"MAXSIZE" {return new Symbol(sym.MAXSIZE,  yychar, yyline, yytext());}
+"UNLIMITED" {return new Symbol(sym.UNLIMITED,  yychar, yyline, yytext());}
+"FILEGROWTH" {return new Symbol(sym.FILEGROWTH,  yychar, yyline, yytext());}
 "KB" {return new Symbol(sym.KB,  yychar, yyline, yytext());}
 "MB" {return new Symbol(sym.MB,  yychar, yyline, yytext());}
 "GB" {return new Symbol(sym.GB,  yychar, yyline, yytext());}

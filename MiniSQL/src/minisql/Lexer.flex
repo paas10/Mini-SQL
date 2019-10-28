@@ -283,7 +283,9 @@ public int columnf;
 "MINUTE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MINUTE;}
 "MODULE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MODULE;}
 "MONTH" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MONTH;}
+"NAME" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NAME;}
 "NAMES" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NAMES;}
+"FILENAME" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return FILENAME;}
 "NATURAL" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NATURAL;}
 "NCHAR" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NCHAR;}
 "NEXT" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NEXT;}
@@ -361,6 +363,9 @@ public int columnf;
 "SCROLL_LOCKS" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return SCROLL_LOCKS;}
 "OPTIMISTIC" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return OPTIMISTIC;}
 "TYPE_WARNING" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return TYPE_WARNING;}
+"MAXSIZE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MAXSIZE;}
+"UNLIMITED" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return UNLIMITED;}
+"FILEGROWTH" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return FILEGROWTH;}
 "KB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return KB;}
 "MB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MB;}
 "GB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return GB;}

@@ -14,19 +14,22 @@ public class TokenAnalisis {
     public Token token;
     public String produccion;
     public int linea;
-    public int columna;
+    public int columnai;
+    public int columnaf;
   
     public TokenAnalisis() {
         this.produccion = "";
         this.linea = 0;
-        this.columna = 0;
+        this.columnai = 0;
+        this.columnaf = 0;
     }
 
-    public TokenAnalisis(Token token, String produccion, int linea, int columna) {
+    public TokenAnalisis(Token token, String produccion, int linea, int columnai, int columnaf) {
         this.token = token;
         this.produccion = produccion;
         this.linea = linea;
-        this.columna = columna;
+        this.columnai = columnai;
+        this.columnaf = columnaf;
     }
     
 }

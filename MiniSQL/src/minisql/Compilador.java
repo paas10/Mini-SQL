@@ -19,9 +19,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -176,7 +180,7 @@ public class Compilador extends javax.swing.JFrame {
 
         String PathOut = Path + ".out";
 
-        //AnalizarTokens(ArchivoSQL, PathOut);
+        AnalizarTokens(ArchivoSQL, PathOut);
     }//GEN-LAST:event_btnPathActionPerformed
 
     // Método que escribe el archivo .out y escribe en pantalla el analisis del archivo.
@@ -231,12 +235,12 @@ public class Compilador extends javax.swing.JFrame {
                             flagError = true;
 
                         } else {
-                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                            jtaResultado.append("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t" + lexer.lexeme
                                     + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
-                            Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
+                            Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t" + lexer.lexeme
                                     + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
 
-                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni, lexer.columnf);
                             ColaTemp.offer(tok);
                         }
                         break;
@@ -269,7 +273,7 @@ public class Compilador extends javax.swing.JFrame {
                         Lista.add("Linea " + (lexer.line + 1) + ". Token: " + token + ":\t\t" + lexer.lexeme
                                 + "\t{Columna Inicial:" + lexer.columni + " Columna Final: " + lexer.columnf + "}\n");
 
-                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni, lexer.columnf);
                         ColaTemp.offer(tok);
                         break;
                 }
@@ -283,7 +287,7 @@ public class Compilador extends javax.swing.JFrame {
                     if (!flagError)
                     {
                         // ... Se agrega el token final a la cola
-                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                        tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni, lexer.columnf);
                         ColaTemp.offer(tok);
 
                         // Se avanza una posicion más... 
@@ -292,7 +296,7 @@ public class Compilador extends javax.swing.JFrame {
                         if (token == Token.GO)
                         {
                             // Se agrega el otro final a la cola de analisis temporal
-                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni);
+                            tok = new TokenAnalisis(token, lexer.lexeme, lexer.line + 1, lexer.columni, lexer.columnf);
                             ColaTemp.offer(tok);
                             token = lexer.yylex();
                         }
@@ -326,46 +330,9 @@ public class Compilador extends javax.swing.JFrame {
 
             // ESCRITURA DEL ARCHIVO .OUT
             EscrituraOutLexico(PathOut, Lista);
-
-            /*
-            this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
-
-            while (this.ColaAnalisis.peek() != null) {
-                if (Actual.token == Token.InicialA && !ErrorSintactico)
-                {
-                    Inicial();
-                }
-                else if (Actual.token != Token.InicialA && ErrorSintactico)
-                {
-                    // Consumo todos los elementos que no sean Final (; o GO)
-                    while (Actual.token != Token.Final)
-                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
-                    
-                    // Consumo un elemento más para verificar si es otro Final, de lo contrario debería de haber
-                    // comenzado otra sentencia
-                    // Si es otro final, consumo el segundo final para que comience otra sentencia
-                    this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
-                    if (Actual.token == Token.Final)
-                        this.Actual = (TokenAnalisis) this.ColaAnalisis.poll();
-                    
-                    // Debería de ser el inicio de otra sentencia, por lo que se convierte en FALSE la Flag de
-                    // Error sintactico y se manda a analizar nuevamente desde incial.
-                    ErrorSintactico = false;
-                    Inicial();
-                }
-                else if (Actual.token == Token.InicialA && ErrorSintactico)
-                {
-                    // Se asume que hubo un error en la sentencia pasada y que se logró consumir la sentencia completa
-                    // Se procede a analizar la siguiente sentencia, sin embargo se cambia nuevamente la Flag de
-                    // error sintactico a FALSE
-                    ErrorSintactico = false;
-                    Inicial();
-                }
-            }
-            */
+            ArchivoPrevioAnalisisLexico(ColaAnalisis);
+            //AnalisisSintactico();
             
-            jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
-
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -396,7 +363,87 @@ public class Compilador extends javax.swing.JFrame {
         writer.close();
     }
 
+    private void ArchivoPrevioAnalisisLexico(LinkedList ColaAnalisis) throws IOException
+    {
+        String PathArchivo = "C:\\Users\\Admin\\Desktop\\PrevioSintactico.txt";
+        // Escritor del archivo de salida.
+        File ArchivoOut = new File(PathArchivo);
+        FileWriter writer = new FileWriter(ArchivoOut);
+        PrintWriter pw = new PrintWriter(ArchivoOut);
+
+        int linea = 1;
+        int columnai = 0;
+        int columnaf = 0;
+        String Linea = "";
+                
+        TokenAnalisis Tok;
+
+        while (this.ColaAnalisis.peek() != null) 
+        {
+            Tok = (TokenAnalisis) ColaAnalisis.poll();
+            columnai = Tok.columnai;
+            
+            if (Tok.linea == linea)
+            {
+                while (columnai - columnaf > 1)
+                {
+                    Linea += ' ';
+                    columnaf++;
+                }
+                Linea += Tok.produccion;
+                
+                columnaf = Tok.columnaf;
+            }
+            else
+            {
+                Linea += "\n";
+                pw.append(Linea);
+                linea++;
+                
+                while(Tok.linea != linea)
+                {
+                    Linea = "";
+                    Linea += "\n";
+                    pw.append(Linea);
+                    linea++;
+                }
+                
+                Linea = "";
+                Linea += Tok.produccion;
+                
+                columnaf = Tok.columnaf;
+            }
+        }
+        
+        pw.append(Linea);
+        
+        pw.close();
+        writer.close();
+    }
     
+    private void AnalisisSintactico () throws IOException
+    {
+        String PathArchivo = "C:\\Users\\Admin\\Desktop\\PrevioSintactico.txt";
+        
+        String Texto = new String(Files.readAllBytes(Paths.get(PathArchivo)));
+        //Sintax s = new Sintax(new minisql.LexerCup(new StringReader(Texto)));
+        
+        try
+        {
+            //s.parse();
+            jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+        }
+        catch(Exception E)
+        {
+            //Symbol sym = s.getS();
+            
+            //String valor = (String) sym.value;
+            //int longitud = valor.length();
+            
+            //jtaResultado1.append("Linea " + (sym.right + 1) + "Error de sintaxis: Simbolo no reconocido" + 
+            //        sym.value + "\t\tColumna Inicial: " + (sym.left + 1) + " - Columna Final: " + (sym.left + longitud));
+        }
+    }
     
     /**
      * @param args the command line arguments
