@@ -357,6 +357,8 @@ public enum Token {
     USING,
     VALUE,
     VARCHAR,
+    NVARCHAR,
+    MONEY,
     WHENEVER,
     WORK,
     WRITE,

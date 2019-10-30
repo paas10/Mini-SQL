@@ -342,6 +342,8 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "USING" {return new Symbol(sym.USING, yycolumn, yyline, yytext());}
 "VALUE" {return new Symbol(sym.VALUE, yycolumn, yyline, yytext());}
 "VARCHAR" {return new Symbol(sym.VARCHAR, yycolumn, yyline, yytext());}
+"NVARCHAR" {return new Symbol(sym.NVARCHAR, yycolumn, yyline, yytext());}
+"MONEY" {return new Symbol(sym.MONEY, yycolumn, yyline, yytext());}
 "WHENEVER" {return new Symbol(sym.WHENEVER, yycolumn, yyline, yytext());}
 "WORK" {return new Symbol(sym.WORK, yycolumn, yyline, yytext());}
 "WRITE" {return new Symbol(sym.WRITE, yycolumn, yyline, yytext());}

@@ -338,6 +338,8 @@ public int columnf;
 "USING" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return USING;}
 "VALUE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return VALUE;}
 "VARCHAR" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return VARCHAR;}
+"NVARCHAR" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return NVARCHAR;}
+"MONEY" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MONEY;}
 "WHENEVER" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return WHENEVER;}
 "WORK" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return WORK;}
 "WRITE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return WRITE;}

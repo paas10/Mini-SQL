@@ -146,10 +146,10 @@ terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, AD
     FILENAME, NATURAL, NCHAR, NEXT, NO, NONE, NUMERIC, OVERLAPS, PAD, PARTIAL, OCTET_LENGTH, ONLY, OUTPUT, SESSION, SIZE,
     SMALLINT, SPACE, SQL, SQLCA, PASCAL, POSITION, PREPARE, PRESERVE, PRIOR, PRIVILEGES, SQLCODE, SQLERROR, SQLSTATE,
     SQLWARNING, SUBSTRING, SUM, REAL, RELATIVE, ROWS, SCROLL, SECOND, SECTION, TEMPORARY, TIME, TIMESTAMP, TIMEZONE_HOUR,
-    TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, TRANSLATION,
-    TRIM, TRUE, UNKNOWN, ZONE, READONLY, ENCRYPTION, RETURNS, SCHEMABINDING, CALLED, INLINE, CALLER, SELF, OWNER, RECOMPILE,
-    MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, MAXSIZE,
-    UNLIMITED, FILEGROWTH, KB, MB, GB, TB, PYCGO;
+    TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, NVARCHAR, MONEY, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, 
+    TRANSLATION, TRIM, TRUE, UNKNOWN, ZONE, READONLY, ENCRYPTION, RETURNS, SCHEMABINDING, CALLED, INLINE, CALLER, SELF, OWNER, 
+    RECOMPILE, MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, 
+    MAXSIZE, UNLIMITED, FILEGROWTH, KB, MB, GB, TB, PYCGO;
 
 non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2A, Object3, Object3A, Object4,
     Object4A, IFE, Variable, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
@@ -164,19 +164,24 @@ non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2
     Optionals_A, Optional, Size, Size_A, Maxsize, Maxsize_A, Filegrowth, Filegrowth_A, CreateView, CreateIndex,
     CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex, OptionalOn, CreateTable, FileGroup,
     NFR, CNC, CNCA, ColumnDef, ColumnDefZ, ColumnDefY, ColumnDefX, ColumnDefW, ColumnDefV, ColumnDefA, ColumnDefD,
-    ColumnDefE, ColumnDefF, ColumnDefG, ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE,
-    ColumnConstrF, ColumnConstrG, ColumnConstrH, ColumnConstrI, TableConstr, TableConstrA, TableConstrB,
-    TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterDatabase, 
-    AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
-    AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB, AlterTableDropC, AlterTableDropD, BeginTran,
-    BeginTranA, BeginTranB, BeginTranC, SavePoint, Name, NameA, TranName, Commit, CommitA, Rollback, RollbackA,
-    Procedure, SP_Reservada, NumSP, Param, Params, ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3,
-    ProcOption, ProcOption1, ProcOption2, ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,
-    StmtSP2, ExecProcedureA, RepeatProcedure, RepeatProcedureA, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly, Type_Return, Data, Table, SCT, DType,
-    With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList, VariableLista, CursorDeclare, CursorDeclarea,
-    CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree, CursorDeclaref, CursorDeclareg, CursorOpen,
-    CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc, CursorFetchd, CursorFetche, CursorClose, 
-    CursorDealloc, OperadoresBooleanos, NFR1, NFR2, EXECUTE_AS_CLAUSE, Data_Type;
+    ColumnDefE, ColumnDefF, ColumnDefG, ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC,
+    ColumnConstrD, ColumnConstrE, ColumnConstrF, ColumnConstrG, ColumnConstrH, ColumnConstrI, TableConstr, 
+    TableConstrA, TableConstrB, TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB,
+    AlterDBA, AlterDBB, AlterDatabase, AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn,
+    AlterColumnC, AlterColumnA, AlterColumnD, AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB,
+    AlterTableDropC, AlterTableDropD, BeginTran, BeginTranA, BeginTranB, BeginTranC, SavePoint, Name, NameA, 
+    TranName, Commit, CommitA, Rollback, RollbackA, Procedure, SP_Reservada, NumSP, Param, Params, ParamsSP,
+    ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3, ProcOption, ProcOption1, ProcOption2,
+    ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,StmtSP2, ExecProcedure,
+    RepeatProcedure, RepeatProcedureA, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly,
+    Type_Return, Data, Table, SCT, DType, With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList,
+    VariableLista, CursorDeclare, CursorDeclarea, CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree,
+    CursorDeclaref, CursorDeclareg, CursorOpen, CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc,
+    CursorFetchd, CursorFetche, CursorClose,  CursorDealloc, OperadoresBooleanos, NFR1, NFR2, EXECUTE_AS_CLAUSE,
+    Data_Type, CallFunction, FunctionContent, FunctionContentA;
+
+precedence right Object4;
+precedence left Object2;
 
 start with Inicial;
 
@@ -186,7 +191,7 @@ InicialA ::= DML | DDL | TCL | TSQL;
 DML ::= Select | Insert | Delete | Update;
 DDL ::= Create | Alter | Drop | Truncate;
 TCL ::= BeginTran | Rollback | Commit | SavePoint;
-TSQL ::= CursorDeclare | ExecProcedureA;
+TSQL ::= CursorDeclare | ExecProcedure;
 
 Final ::= PYC | GO | PYCGO;
 
@@ -205,7 +210,7 @@ Variable ::= ARROBA IDENTIFICADOR;
 
 Tipo_dato ::= Tipo_datoD Tipo_datoB;
 Tipo_datoD ::= Tipo_datoA | CORCHETE_APERTURA Tipo_datoA CORCHETE_CIERRE;
-Tipo_datoA ::= VARCHAR | INTEGER |FLOAT | DATE | BIT | DOUBLE | CHAR | CURSOR | NCHAR | REAL | TIME | INT | DECIMAL | SMALLINT | NUMERIC;
+Tipo_datoA ::= NVARCHAR | VARCHAR | MONEY | INTEGER |FLOAT | DATE | BIT | DOUBLE | CHAR | CURSOR | NCHAR | REAL | TIME | INT | DECIMAL | SMALLINT | NUMERIC;
 Tipo_datoB ::= PARENTESIS_APERTURA CONSTANTE_ENTERA Tipo_datoC PARENTESIS_CIERRE |;
 Tipo_datoC ::= COMA CONSTANTE_ENTERA |;
 
@@ -240,6 +245,10 @@ ExpresionE ::= Object4 | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADEN
 ExpresionF ::= Object4 PARENTESIS_CIERRE
     | CONSTANTE_ENTERA PARENTESIS_CIERRE
     | MULTIPLICACION PARENTESIS_CIERRE;
+
+//CallFunction ::= PARENTESIS_APERTURA FunctionContent PARENTESIS_CIERRE |;
+//FunctionContent ::= DType FunctionContentA;
+//FunctionContentA ::= COMA FunctionContent|;
 
 Not ::= NOT |;
 
@@ -459,18 +468,13 @@ StmtSP ::= DML Final StmtSP1;
 StmtSP1 ::= DML Final StmtSP2 |;
 StmtSP2 ::= DML Final |;
 
-ExecProcedureA ::= ClauseExec IDENTIFICADOR 
-    | ClauseExec IDENTIFICADOR PARENTESIS_APERTURA RepeatProcedure PARENTESIS_APERTURA 
-    | ClauseExec IDENTIFICADOR RepeatProcedure;
-RepeatProcedure ::= Variable ASIGNACION Data_Type 
-    | Variable ASIGNACION Data_Type RepeatProcedureA 
-    | Data_Type | Data_Type RepeatProcedureA;
-RepeatProcedureA ::= COMA Variable ASIGNACION Data_Type RepeatProcedureA 
-    | COMA Data_Type;
-Data_Type ::=  CONSTANTE_ENTERA 
-    | CONSTANTE_FLOTANTE 
-    | CONSTANTE_CADENA 
-    | CONSTANTE_BOOLEANA;
+ExecProcedure ::= ClauseExec Object2 
+    | ClauseExec Object2 PARENTESIS_APERTURA RepeatProcedure PARENTESIS_CIERRE 
+    | ClauseExec Object2 RepeatProcedure;
+RepeatProcedure ::= Variable ASIGNACION Data_Type RepeatProcedureA 
+    | Data_Type RepeatProcedureA; 
+RepeatProcedureA ::= COMA RepeatProcedure |;
+Data_Type ::=  CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
 
 CursorDeclare ::= DECLARE ID CURSOR CursorDeclarea CursorDeclareb CursorDeclarec CursorDeclared CursorDeclaree FOR Select CursorDeclaref;
 CursorDeclarea ::= LOCAL|GLOBAL|;
