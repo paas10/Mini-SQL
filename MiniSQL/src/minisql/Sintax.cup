@@ -284,7 +284,7 @@ Insert ::= INSERT Top InsertInto Object3 InsertColumnList InsertValores;
 InsertInto ::= INTO |;
 InsertColumnList ::= ColumnList |;
 InsertExpresion ::= InsertExpresionA InsertExpresionB;
-InsertExpresionA ::= DEFAULT | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
+InsertExpresionA ::= DEFAULT | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA |;
 InsertExpresionB ::= COMA InsertExpresionA InsertExpresionB |;
 InsertValores ::= VALUES PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA | DEFAULT VALUES;
 InsertValoresA ::= COMA PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA |;
@@ -439,7 +439,7 @@ ParamsSP ::= ParamsA_SP |;
 ParamsA_SP ::= Variable TipoD_SP ParamsB_SP;
 ParamsB_SP ::= COMA ParamsA_SP |;
 
-TipoD_SP ::= Tipo_datoA TipoD_SP1 TipoD_SP2
+TipoD_SP ::= Tipo_dato TipoD_SP1 TipoD_SP2
     | CURSOR VARYING TipoD_SP3
     | ID READONLY;
 TipoD_SP1 ::=ASIGNACION DEFAULT |;
