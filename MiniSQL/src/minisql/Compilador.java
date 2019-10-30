@@ -126,7 +126,7 @@ public class Compilador extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
                                 .addComponent(jLabel2)))
-                        .addGap(0, 307, Short.MAX_VALUE))
+                        .addGap(0, 414, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,8 +155,8 @@ public class Compilador extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         lblPath.getAccessibleContext().setAccessibleName("lblPath");
@@ -442,9 +442,17 @@ public class Compilador extends javax.swing.JFrame {
         while (ErroresSintacticos.peek() != null)
         {
             jtaResultado1.append(ErroresSintacticos.removeFirst());
+            jtaResultado1.append("\n");
         }
         
-        jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+        String TextoImpreso = jtaResultado1.getText();
+        
+        if(TextoImpreso.length() == 0)
+            jtaResultado1.append("ANÁLISIS SINTÁCTICO FINALIZADO");
+        else
+            jtaResultado1.append("\nANÁLISIS SINTÁCTICO FINALIZADO");
+        
+        
     }
     
     /**

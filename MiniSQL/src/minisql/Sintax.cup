@@ -26,7 +26,7 @@ parser code
             list.add("    ");
         }
         
-        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido:\t" + s.value + "\t Columna Inicial:" + (s.left+1) + "\tSe esperaba: " + list);
+        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido: " + s.value + "\t Columna Inicial: " + (s.left+1) + "\tSe esperaba: " + list);
     }
 
     public void unrecovered_syntax_error(Symbol cur_token){
@@ -39,7 +39,7 @@ parser code
             list.add("    ");
         }
         
-        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido:\t" + s.value + "\t Columna Inicial:" + (s.left+1) + "\tSe esperaba: " + list);
+        Errores.add("Linea " + (s.right+1) + ". Error: Simbolo no Reconocido: " + s.value + "\t Columna Inicial: " + (s.left+1) + "\tSe esperaba: " + list);
     }
 
     // En base al numero obtenido de lookahead lo convierte al token esperado
@@ -74,7 +74,7 @@ parser code
     }
 
     // Para seguir analizando despues de un error
-    protected static final int _error_sync_size(){
+    protected int error_sync_size() {
         return 1;
     }
 
@@ -149,7 +149,7 @@ terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, AD
     TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, TRANSLATION,
     TRIM, TRUE, UNKNOWN, ZONE, READONLY, ENCRYPTION, RETURNS, SCHEMABINDING, CALLED, INLINE, CALLER, SELF, OWNER, RECOMPILE,
     MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, MAXSIZE,
-    UNLIMITED, FILEGROWTH, KB, MB, GB, TB;
+    UNLIMITED, FILEGROWTH, KB, MB, GB, TB, PYCGO;
 
 non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2A, Object3, Object3A, Object4,
     Object4A, IFE, Variable, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
@@ -170,13 +170,13 @@ non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2
     AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD,
     AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB, AlterTableDropC, AlterTableDropD, BeginTran,
     BeginTranA, BeginTranB, BeginTranC, SavePoint, Name, NameA, TranName, Commit, CommitA, Rollback, RollbackA,
-    Procedure, SP_Reservada, NumSP, ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3,
+    Procedure, SP_Reservada, NumSP, Param, Params, ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3,
     ProcOption, ProcOption1, ProcOption2, ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,
-    StmtSP2, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly, Type_Return, Data, Table, SCT, DType,
+    StmtSP2, ExecProcedureA, RepeatProcedure, RepeatProcedureA, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly, Type_Return, Data, Table, SCT, DType,
     With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList, VariableLista, CursorDeclare, CursorDeclarea,
     CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree, CursorDeclaref, CursorDeclareg, CursorOpen,
     CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc, CursorFetchd, CursorFetche, CursorClose, 
-    CursorDealloc, OperadoresBooleanos, NFR1, NFR2;
+    CursorDealloc, OperadoresBooleanos, NFR1, NFR2, EXECUTE_AS_CLAUSE, Data_Type;
 
 start with Inicial;
 
@@ -186,9 +186,9 @@ InicialA ::= DML | DDL | TCL | TSQL;
 DML ::= Select | Insert | Delete | Update;
 DDL ::= Create | Alter | Drop | Truncate;
 TCL ::= BeginTran | Rollback | Commit | SavePoint;
-TSQL ::= CursorDeclare;
+TSQL ::= CursorDeclare | ExecProcedureA;
 
-Final ::= PYC | GO;
+Final ::= PYC | GO | PYCGO;
 
 ID ::= IDENTIFICADOR | CORCHETE_APERTURA IDENTIFICADOR CORCHETE_CIERRE;
 
@@ -231,7 +231,7 @@ ExpresionA ::= SUMA ExpresionB ExpresionA | RESTA ExpresionB ExpresionA |;
 ExpresionB ::= ExpresionD ExpresionC;
 ExpresionC ::= MULTIPLICACION ExpresionD ExpresionC | DIVISION ExpresionD ExpresionC |;
 ExpresionD ::= PARENTESIS_APERTURA Expresion PredicadoC PARENTESIS_CIERRE | ExpresionE;
-ExpresionE ::= Object4 | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL 
+ExpresionE ::= Object4 | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | Variable | NULL 
     | SUM PARENTESIS_APERTURA ExpresionF
     | AVG PARENTESIS_APERTURA ExpresionF
     | MIN PARENTESIS_APERTURA ExpresionF
@@ -319,7 +319,7 @@ CreateDBB ::= ON Primary FileSpecs |;
 
 Primary ::= PRIMARY |;
 FileSpecs ::= FileSpec COMA FileSpecs | FileSpec;
-FileSpec ::= PARENTESIS_APERTURA NAME  ASIGNACION CONSTANTE_CADENA COMA FILENAME ASIGNACION CONSTANTE_CADENA Optionals PARENTESIS_CIERRE;
+FileSpec ::= PARENTESIS_APERTURA NAME ASIGNACION CONSTANTE_CADENA COMA FILENAME ASIGNACION CONSTANTE_CADENA Optionals PARENTESIS_CIERRE;
 COLLATEDB ::= COLLATE ID |;
 
 Optionals ::= COMA Optional Optionals|;
@@ -454,10 +454,24 @@ ClauseExec ::= EXECUTE | EXEC;
 ProcOptionRec ::= COMA ProcOption1 |;
 Clause ::= CALLER | SELF | OWNER | ID;
 ReplicationSP ::= FOR REPLICATION |;
-StartSP ::= BEGIN StmtSP END | StmtSP;
+StartSP ::= BEGIN StmtSP END;
 StmtSP ::= DML Final StmtSP1;
 StmtSP1 ::= DML Final StmtSP2 |;
 StmtSP2 ::= DML Final |;
+
+ExecProcedureA ::= ClauseExec IDENTIFICADOR 
+    | ClauseExec IDENTIFICADOR PARENTESIS_APERTURA RepeatProcedure PARENTESIS_APERTURA 
+    | ClauseExec IDENTIFICADOR RepeatProcedure;
+RepeatProcedure ::= Variable ASIGNACION Data_Type 
+    | Variable ASIGNACION Data_Type RepeatProcedureA 
+    | Data_Type | Data_Type RepeatProcedureA;
+RepeatProcedureA ::= COMA Variable ASIGNACION Data_Type RepeatProcedureA 
+    | COMA Data_Type;
+Data_Type ::=  CONSTANTE_ENTERA 
+    | CONSTANTE_FLOTANTE 
+    | CONSTANTE_CADENA 
+    | CONSTANTE_BOOLEANA;
+
 CursorDeclare ::= DECLARE ID CURSOR CursorDeclarea CursorDeclareb CursorDeclarec CursorDeclared CursorDeclaree FOR Select CursorDeclaref;
 CursorDeclarea ::= LOCAL|GLOBAL|;
 CursorDeclareb ::= SCROLL|FORWARD_ONLY|;
@@ -466,3 +480,26 @@ CursorDeclared ::= READ_ONLY|SCROLL_LOCKS|OPTIMISTIC|;
 CursorDeclaree ::= TYPE_WARNING|;
 CursorDeclaref ::= FOR UPDATE CursorDeclareg|;
 CursorDeclareg ::= OF ColumnListA|;
+
+Function  ::= OrAlter FUNCTION Object2 PARENTESIS_APERTURA Params PARENTESIS_CIERRE RETURNS Type_Return;
+Params ::= PARAM_A |;
+OrAlter ::= OR ALTER|;
+
+Param ::= Variable As Tipo_datoA ReadOnly;
+PARAM_A ::= Param PARAM_B;
+PARAM_B ::= COMA PARAM_A|;
+
+As ::= AS |;
+ReadOnly ::= READONLY|;
+Type_Return ::= Data | Table;
+Data ::= Tipo_datoA With As BEGIN DML RETURN DType END;
+Table ::= TABLE With As RETURN SCT;
+SCT ::= PARENTESIS_APERTURA Select PARENTESIS_CIERRE | Select;
+DType ::= Variable | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
+With ::= WITH FuncOpc;
+
+FuncOpc ::= FuncOpcA FuncOpcB;
+FuncOpcA ::= ENCRYPTION  | SCHEMABINDING | RETURNS NULL ON NULL INPUT | CALLED ON NULL INPUT | EXECUTE_AS_CLAUSE | INLINE ASIGNACION FuncOpcC;
+FuncOpcB ::= COMA FuncOpc |;
+FuncOpcC ::= ON | OFF;
+EXECUTE_AS_Clause ::= ClauseExec AS Clause;

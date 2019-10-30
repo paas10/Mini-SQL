@@ -263,6 +263,7 @@ public enum Token {
     FIRST,
     FLOAT,
     FORTRAN,
+    PYCGO,
     CAST,
     CATALOG,
     CHAR,

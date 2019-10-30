@@ -370,6 +370,7 @@ public int columnf;
 "MB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MB;}
 "GB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return GB;}
 "TB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return TB;}
+(";" {WHITE}* "GO") {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return PYCGO;}
 
 
 [a-zA-Z]({LETRA} | {DIGITO})* {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return IDENTIFICADOR;}
@@ -379,11 +380,10 @@ public int columnf;
 {COMENTARIO}+ {/*Ignore*/}
 {ERROR_COMENTARIO_MULTILINEA}+ {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return ERROR_COMENTARIO;}
 
-
-[0 | 1 | NULL] {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return CONSTANTE_BOOLEANA;}
 ({DIGITO})+ {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return CONSTANTE_ENTERA;}
 {DIGITO}+ "." {DIGITO}* ([E|e] [+,-]? {DIGITO}*)? {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return CONSTANTE_FLOTANTE;}
 "'" {CADENAS} "'" {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return CONSTANTE_CADENA;}
+[0 | 1 | NULL] {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return CONSTANTE_BOOLEANA;}
 
 "'" {CADENAS} {lexeme=yytext(); line=yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return ERROR_CADENA;}
 
