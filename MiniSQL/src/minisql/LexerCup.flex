@@ -372,6 +372,7 @@ COMENTARIO = {COMENTRIO_LINEA} | {COMENTARIO_MULTILINEA}
 "MAXSIZE" {return new Symbol(sym.MAXSIZE, yycolumn, yyline, yytext());}
 "UNLIMITED" {return new Symbol(sym.UNLIMITED, yycolumn, yyline, yytext());}
 "FILEGROWTH" {return new Symbol(sym.FILEGROWTH, yycolumn, yyline, yytext());}
+"DELAYED_DURABILITY" {return new Symbol(sym.DELAYED_DURABILITY, yycolumn, yyline, yytext());}
 "KB" {return new Symbol(sym.KB, yycolumn, yyline, yytext());}
 "MB" {return new Symbol(sym.MB, yycolumn, yyline, yytext());}
 "GB" {return new Symbol(sym.GB, yycolumn, yyline, yytext());}

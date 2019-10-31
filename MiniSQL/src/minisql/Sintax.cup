@@ -149,54 +149,57 @@ terminal RESERVADA, SUMA, RESTA, MULTIPLICACION, DIFERENCIA, AMPERSAND, PIPE, AD
     TIMEZONE_MINUTE, UPPER, USAGE, USING, VALUE, VARCHAR, NVARCHAR, MONEY, WHENEVER, WORK, WRITE, YEAR, TRAILING, TRANSLATE, 
     TRANSLATION, TRIM, TRUE, UNKNOWN, ZONE, READONLY, ENCRYPTION, RETURNS, SCHEMABINDING, CALLED, INLINE, CALLER, SELF, OWNER, 
     RECOMPILE, MARK, FORWARD_ONLY, STATIC, KEYSET, DYNAMIC, FAST_FORWARD, READ_ONLY, SCROLL_LOCKS, OPTIMISTIC, TYPE_WARNING, 
-    MAXSIZE, UNLIMITED, FILEGROWTH, KB, MB, GB, TB, PYCGO;
+    MAXSIZE, UNLIMITED, FILEGROWTH, DELAYED_DURABILITY, KB, MB, GB, TB, PYCGO;
 
 non terminal Inicial, InicialA, DML, DDL, TCL, TSQL, Final, ID, Object2, Object2A, Object3, Object3A, Object4,
     Object4A, IFE, Variable, Tipo_dato, Tipo_datoD, Tipo_datoA, Tipo_datoB, Tipo_datoC, Drop, DropA, DropTable,
-    DropTableA, DropUser, DropDatabase, DropDatabaseA, DropView, DropViewA, DropIndex, DropIndexA, DropIndexB,
-    Truncate, Alias, AliasA, Expresion, ExpresionA, ExpresionB, ExpresionC, ExpresionD, ExpresionE, ExpresionF,
-    Not, Top, TopA, Expresiones, SearchCondition, SearchConditionA, Predicado, PredicadoA, PredicadoC, Where,
-    SelectColumns, SelectColumnsA, ColumnList, ColumnListA, ColumnListB, Select, SelectA, Having, Order, OrderA,
-    OrderB, OrderC, Group, GroupA, Insert, InsertInto, InsertColumnList, InsertExpresion, InsertExpresionA,
-    InsertExpresionB, InsertValores, InsertValoresA, Delete, FromDelete, DeleteA, DeleteB, DeleteC, Server,
-    Update, UpdateA, UpdateB, UpdateC, FromUpdate, FromSelect, FromSelectA, Join, Type, Outer, Create, CreateA,
-    CreateUser, CreateDB, CreateDBA, CreateDBB, Primary, FileSpecs, FileSpec, COLLATEDB, Filename, Optionals,
-    Optionals_A, Optional, Size, Size_A, Maxsize, Maxsize_A, Filegrowth, Filegrowth_A, CreateView, CreateIndex,
-    CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex, OptionalOn, CreateTable, FileGroup,
-    NFR, CNC, CNCA, ColumnDef, ColumnDefZ, ColumnDefY, ColumnDefX, ColumnDefW, ColumnDefV, ColumnDefA, ColumnDefD,
-    ColumnDefE, ColumnDefF, ColumnDefG, ColumnDefH, ColumnConstr, ColumnConstrA, ColumnConstrB, ColumnConstrC,
-    ColumnConstrD, ColumnConstrE, ColumnConstrF, ColumnConstrG, ColumnConstrH, ColumnConstrI, TableConstr, 
-    TableConstrA, TableConstrB, TableConstrC, TableConstrD, TableConstrE, TableIndex, Alter, AlterA, AlterDB,
-    AlterDBA, AlterDBB, AlterDatabase, AlterUser, AlterView, AlterViewA, AlterTable, AlterTableA, AlterColumn,
-    AlterColumnC, AlterColumnA, AlterColumnD, AlterColumnE, AlterTableDrop, AlterTableDropA, AlterTableDropB,
-    AlterTableDropC, AlterTableDropD, BeginTran, BeginTranA, BeginTranB, BeginTranC, SavePoint, Name, NameA, 
-    TranName, Commit, CommitA, Rollback, RollbackA, Procedure, SP_Reservada, NumSP, Param, Params, ParamsSP,
-    ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3, ProcOption, ProcOption1, ProcOption2,
+    DropTableA, DropUser, DropDatabase, DropDatabaseA, DropView, DropViewA, DropIndex, DropIndexA, DropIndexB, 
+    DropProcedure, DropProcedureA, Truncate, Alias, AliasA, Expresion, ExpresionA, ExpresionB, ExpresionC, 
+    ExpresionD, ExpresionE, ExpresionF, Not, Top, TopA, Expresiones, SearchCondition, SearchConditionA, 
+    Predicado, PredicadoA, PredicadoC, Where, SelectColumns, SelectColumnsA, ColumnList, ColumnListA, 
+    ColumnListB, Select, SelectA, Having, Order, OrderA, OrderB, OrderC, Group, GroupA, Insert, InsertInto, 
+    InsertColumnList, InsertExpresion, InsertExpresionA, InsertExpresionB, InsertValores, InsertValoresA, Delete,
+    FromDelete, DeleteA, DeleteB, DeleteC, Server, Update, UpdateA, UpdateB, UpdateC, FromUpdate, FromSelect,
+    FromSelectA, Join, Type, Outer, Create, CreateA, CreateUser, CreateDB, CreateDBA, CreateDBB, Primary, FileSpecs,
+    FileSpec, COLLATEDB, Filename, Optionals, Optionals_A, Optional, Size, Size_A, Maxsize, Maxsize_A, Filegrowth,
+    Filegrowth_A, CreateView, CreateIndex, CreateIndexA, ColumnIndex, ColumnIndexA, ColumnIndexB, IncludeIndex,
+    OptionalOn, CreateTable, FileGroup, NFR, CNC, CNCA, ColumnDef, ColumnDefZ, ColumnDefY, ColumnDefX, ColumnDefW,
+    ColumnDefV, ColumnDefA, ColumnDefD, ColumnDefE, ColumnDefF, ColumnDefG, ColumnDefH, ColumnConstr, ColumnConstrA,
+    ColumnConstrB, ColumnConstrC, ColumnConstrD, ColumnConstrE, ColumnConstrF, ColumnConstrG, ColumnConstrH,
+    ColumnConstrI, TableConstr, TableConstrA, TableConstrB, TableConstrC, TableConstrD, TableConstrE, TableIndex,
+    Alter, AlterA, AlterDB, AlterDBA, AlterDBB, AlterDatabase, AlterUser, AlterView, AlterViewA, AlterTable,
+    AlterTableA, AlterColumn, AlterColumnC, AlterColumnA, AlterColumnD, AlterColumnE, AlterTableDrop, AlterTableDropA,
+    AlterTableDropB, AlterTableDropC, AlterTableDropD, BeginTran, BeginTranA, BeginTranB, BeginTranC, SavePoint, Name,
+    NameA,  TranName, Commit, CommitA, CommitB, OnOff, Rollback, RollbackA, Procedure, SP_Reservada, NumSP, Param,
+    ParamsSP, ParamsA_SP, ParamsB_SP, TipoD_SP, TipoD_SP1, TipoD_SP2, TipoD_SP3, ProcOption, ProcOption1, ProcOption2,
     ClauseExec, ProcOptionRec, Clause, ReplicationSP, StartSP, StmtSP, StmtSP1,StmtSP2, ExecProcedure,
     RepeatProcedure, RepeatProcedureA, Function, PARAMS, OrAlter, PARAM, PARAM_A, PARAM_B, As, ReadOnly,
     Type_Return, Data, Table, SCT, DType, With, FuncOpc, FuncOpcA, FuncOpcB, FuncOpcC, Cursores, VariableList,
     VariableLista, CursorDeclare, CursorDeclarea, CursorDeclareb, CursorDeclarec, CursorDeclared, CursorDeclaree,
     CursorDeclaref, CursorDeclareg, CursorOpen, CursorClosea, CursorFetch, CursorFetcha, CursorFetchb, CursorFetchc,
     CursorFetchd, CursorFetche, CursorClose,  CursorDealloc, OperadoresBooleanos, NFR1, NFR2, EXECUTE_AS_CLAUSE,
-    Data_Type, CallFunction, FunctionContent, FunctionContentA;
+    Data_Type, CallFunction, FunctionContent, FunctionContentA, InicialB, DTypes, FinalTran, FileDB, NameDB, Sizew, Sizenw,
+    DropFunction;
 
+precedence right Not;
+precedence left PARENTESIS_APERTURA;
 precedence right Object4;
 precedence left Object2;
 
 start with Inicial;
 
-Inicial ::= InicialA Final Inicial | error Final Inicial |;
-InicialA ::= DML | DDL | TCL | TSQL;
+Inicial ::= InicialA |;
+InicialA ::= DML Inicial | DDL Inicial | TCL Inicial | TSQL Final Inicial | USE Object4 Final Inicial;
+InicialB ::= DML Inicial | DDL Inicial | TCL Inicial | TSQL Final Inicial | USE Object4 Final Inicial| SavePoint Final InicialB;
 
-DML ::= Select | Insert | Delete | Update;
-DDL ::= Create | Alter | Drop | Truncate;
-TCL ::= BeginTran | Rollback | Commit | SavePoint;
+DML ::= Select Final | Insert Final | Delete Final | Update Final | error Final;
+DDL ::= Create Final| Alter Final | Drop Final | Truncate Final;
+TCL ::= BeginTran Final InicialA FinalTran;
 TSQL ::= CursorDeclare | ExecProcedure;
 
 Final ::= PYC | GO | PYCGO;
 
 ID ::= IDENTIFICADOR | CORCHETE_APERTURA IDENTIFICADOR CORCHETE_CIERRE;
-
 Object2 ::= ID Object2A;
 Object2A ::= PUNTO ID |;
 Object3 ::= ID Object3A;
@@ -207,15 +210,14 @@ Object4A ::= PUNTO Object3 |;
 IFE ::= IF EXISTS |;
 
 Variable ::= ARROBA IDENTIFICADOR;
-
 Tipo_dato ::= Tipo_datoD Tipo_datoB;
 Tipo_datoD ::= Tipo_datoA | CORCHETE_APERTURA Tipo_datoA CORCHETE_CIERRE;
-Tipo_datoA ::= NVARCHAR | VARCHAR | MONEY | INTEGER |FLOAT | DATE | BIT | DOUBLE | CHAR | CURSOR | NCHAR | REAL | TIME | INT | DECIMAL | SMALLINT | NUMERIC;
+Tipo_datoA ::= NVARCHAR | VARCHAR | MONEY | INTEGER | FLOAT | DATE | BIT | DOUBLE | CHAR | CURSOR | NCHAR | REAL | TIME | INT | DECIMAL | SMALLINT | NUMERIC;
 Tipo_datoB ::= PARENTESIS_APERTURA CONSTANTE_ENTERA Tipo_datoC PARENTESIS_CIERRE |;
 Tipo_datoC ::= COMA CONSTANTE_ENTERA |;
 
 Drop ::= DROP DropA;
-DropA ::= DropTable | DropUser | DropDatabase | DropView | DropIndex;
+DropA ::= DropTable | DropUser | DropDatabase | DropView | DropIndex |DropProcedure | DropFunction;
 DropTable ::= TABLE IFE Object3 DropTableA;
 DropTableA ::= COMA Object3 DropTableA |;
 DropUser ::= USER IFE ID;
@@ -227,6 +229,10 @@ DropIndex ::= INDEX IFE DropIndexA DropIndexB;
 DropIndexA ::= ID ON Object3;
 DropIndexB ::= COMA DropIndexA DropIndexB |;
 
+DropProcedure ::= SP_Reservada IFE Object2 DropProcedureA;
+DropProcedureA ::= COMA Object2 DropProcedureA |;
+DropFunction ::= FUNCTION IFE Object2 DropProcedureA;
+
 Truncate ::= TRUNCATE TABLE Object3;
 Alias ::= AS AliasA | AliasA |;
 AliasA ::= ID | CONSTANTE_CADENA;
@@ -236,19 +242,20 @@ ExpresionA ::= SUMA ExpresionB ExpresionA | RESTA ExpresionB ExpresionA |;
 ExpresionB ::= ExpresionD ExpresionC;
 ExpresionC ::= MULTIPLICACION ExpresionD ExpresionC | DIVISION ExpresionD ExpresionC |;
 ExpresionD ::= PARENTESIS_APERTURA Expresion PredicadoC PARENTESIS_CIERRE | ExpresionE;
-ExpresionE ::= Object4 | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | Variable | NULL 
+ExpresionE ::= Object4 CallFunction| CONSTANTE_ENTERA | CONSTANTE_FLOTANTE |  CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL | Variable
     | SUM PARENTESIS_APERTURA ExpresionF
     | AVG PARENTESIS_APERTURA ExpresionF
     | MIN PARENTESIS_APERTURA ExpresionF
     | MAX PARENTESIS_APERTURA ExpresionF
     | COUNT PARENTESIS_APERTURA ExpresionF;
+
+CallFunction ::= PARENTESIS_APERTURA FunctionContent PARENTESIS_CIERRE|;
+FunctionContent ::= DType FunctionContentA;
+FunctionContentA ::= COMA FunctionContent|;
+
 ExpresionF ::= Object4 PARENTESIS_CIERRE
     | CONSTANTE_ENTERA PARENTESIS_CIERRE
     | MULTIPLICACION PARENTESIS_CIERRE;
-
-//CallFunction ::= PARENTESIS_APERTURA FunctionContent PARENTESIS_CIERRE |;
-//FunctionContent ::= DType FunctionContentA;
-//FunctionContentA ::= COMA FunctionContent|;
 
 Not ::= NOT |;
 
@@ -256,12 +263,12 @@ Top ::= TOP PARENTESIS_APERTURA CONSTANTE_ENTERA PARENTESIS_CIERRE TopA |;
 TopA ::= PERCENT |;
 
 Expresiones ::= COMA Expresion Expresiones |;
-SearchCondition ::= Not Predicado SearchConditionA;
-
+SearchCondition ::= Not Predicado SearchConditionA | PARENTESIS_APERTURA SearchCondition PARENTESIS_CIERRE SearchConditionA;
 SearchConditionA ::= AND SearchCondition|OR SearchCondition|;
-
 Predicado ::= Expresion PredicadoA;
-OperadoresBooleanos ::=ASIGNACION| DIFERENCIA | GT | EGT | LT | ELT;
+
+OperadoresBooleanos ::= ASIGNACION | DIFERENCIA | GT | EGT | LT | ELT;
+
 PredicadoA ::= OperadoresBooleanos Expresion| IS Not NULL | Not PredicadoC;
 PredicadoC ::= IN PARENTESIS_APERTURA Expresion Expresiones PARENTESIS_CIERRE
     | BETWEEN Expresion AND Expresion
@@ -284,8 +291,7 @@ Having ::= HAVING SearchCondition |;
 Order ::= ORDER BY Expresion OrderA OrderB OrderC |;
 OrderA ::= COLLATE ID |;
 OrderB ::= ASC | DESC |;
-OrderC ::= Expresion OrderA OrderB |;
-
+OrderC ::= COMA Expresion OrderA OrderB|;
 Group ::= GROUP BY Expresion GroupA |;
 GroupA ::= COMA Expresion GroupA |;
 
@@ -293,24 +299,24 @@ Insert ::= INSERT Top InsertInto Object3 InsertColumnList InsertValores;
 InsertInto ::= INTO |;
 InsertColumnList ::= ColumnList |;
 InsertExpresion ::= InsertExpresionA InsertExpresionB;
-InsertExpresionA ::= DEFAULT | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA |;
+
+InsertExpresionA ::= DEFAULT | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE |  CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
 InsertExpresionB ::= COMA InsertExpresionA InsertExpresionB |;
+
 InsertValores ::= VALUES PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA | DEFAULT VALUES;
 InsertValoresA ::= COMA PARENTESIS_APERTURA InsertExpresion PARENTESIS_CIERRE InsertValoresA |;
 
 Delete ::= DELETE Top FromDelete DeleteA;
 FromDelete ::= FROM |;
 DeleteA ::= OPENQUERY Server | Object3 DeleteB Where;
-DeleteB ::= FROM Object3 DeleteC;
+DeleteB ::= FROM Object3 DeleteC|;
 DeleteC ::= COMA Object3 DeleteC |;
 
 Server ::= PARENTESIS_APERTURA ID COMA CONSTANTE_ENTERA PARENTESIS_CIERRE;
-
 Update ::= UPDATE Top Object3 SET UpdateA FromUpdate Where;
 UpdateA ::= ID ASIGNACION UpdateB UpdateC;
 UpdateB ::= DEFAULT | Expresion;
 UpdateC ::= COMA UpdateA|;
-
 FromUpdate ::= FROM Object3 DeleteC |;
 FromSelect ::= FROM Object3 Alias Join FromSelectA |;
 FromSelectA ::= COMA Object3 Alias Join |;
@@ -318,41 +324,42 @@ FromSelectA ::= COMA Object3 Alias Join |;
 Join ::= Type JOIN Object3 Alias ON SearchCondition Join |;
 Type ::= INNER | RIGHT Outer | LEFT Outer | FULL Outer |;
 Outer ::= OUTER |;
-
 Create ::= CREATE CreateA;
 CreateA ::= CreateTable | CreateDB | CreateIndex | CreateUser | CreateView | Procedure | Function;
-CreateUser ::= USER IDENTIFICADOR;
+CreateUser ::= USER ID;
 CreateDB ::= DATABASE ID CreateDBA;
 CreateDBA ::= CreateDBB COLLATEDB;
 CreateDBB ::= ON Primary FileSpecs |;
 
 Primary ::= PRIMARY |;
 FileSpecs ::= FileSpec COMA FileSpecs | FileSpec;
-FileSpec ::= PARENTESIS_APERTURA NAME ASIGNACION CONSTANTE_CADENA COMA FILENAME ASIGNACION CONSTANTE_CADENA Optionals PARENTESIS_CIERRE;
+FileSpec ::= PARENTESIS_APERTURA NameDB ASIGNACION CONSTANTE_CADENA COMA FileDB ASIGNACION CONSTANTE_CADENA Optionals PARENTESIS_CIERRE;
+NameDB ::= NAME | NAMES;
+FileDB ::= FILE | FILENAME;
 COLLATEDB ::= COLLATE ID |;
-
 Optionals ::= COMA Optional Optionals|;
 Optional ::= Size | Maxsize | Filegrowth;
 
-Size ::= SIZE ASIGNACION CONSTANTE_ENTERA Size_A;
+Size ::= Sizew | Sizenw;
+Sizew ::= SIZE ASIGNACION CONSTANTE_ENTERA Size_A;
+Sizenw ::= SIZE ASIGNACION CONSTANTE_ENTERA;
 Size_A ::= KB| MB | GB | TB;
 
 Maxsize ::= MAXSIZE ASIGNACION Maxsize_A;
 Maxsize_A ::= CONSTANTE_ENTERA Size_A | UNLIMITED;
-
 Filegrowth ::= FILEGROWTH ASIGNACION CONSTANTE_ENTERA Filegrowth_A;
 Filegrowth_A ::= Size_A | MODULAR |;
 
 CreateView ::= VIEW Object2 AS Select;
 CreateIndex ::= CreateIndexA ColumnConstrC INDEX ID ON Object3 ColumnIndex IncludeIndex Where OptionalOn;
 CreateIndexA ::= UNIQUE|;
-
 ColumnIndex ::= PARENTESIS_APERTURA ColumnIndexA PARENTESIS_CIERRE;
 ColumnIndexA ::= ID OrderB ColumnIndexB;
 ColumnIndexB ::= COMA ID OrderB ColumnIndexB |;
-
 IncludeIndex ::= INCLUDE ColumnList |;
+
 OptionalOn ::= ON ID PARENTESIS_APERTURA ID PARENTESIS_CIERRE |;
+
 CreateTable ::= TABLE Object3 PARENTESIS_APERTURA CNC CNCA PARENTESIS_CIERRE FileGroup;
 FileGroup ::= ON PRIMARY|;
 
@@ -370,12 +377,11 @@ ColumnDefX ::= NOT|;
 ColumnDefW ::= NULL|FOR REPLICATION ColumnDefV;
 ColumnDefV ::= NOT NULL| NULL|;
 ColumnDefA ::= COLLATE ID |;
-ColumnDefD ::= CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL;
+ColumnDefD ::= CONSTANTE_ENTERA | CONSTANTE_FLOTANTE |  CONSTANTE_CADENA | CONSTANTE_BOOLEANA | NULL;
 ColumnDefE ::= IDENTITY ColumnDefF |;
 ColumnDefF ::= PARENTESIS_APERTURA CONSTANTE_ENTERA COMA CONSTANTE_ENTERA PARENTESIS_CIERRE |;
 ColumnDefG ::= NULL|;
 ColumnDefH ::= ROWGUIDCOL |;
-
 ColumnConstr ::= ColumnConstrA ColumnConstrB ColumnConstr |;
 ColumnConstrA ::= CONSTRAINT ID |;
 ColumnConstrB ::= PRIMARY KEY ColumnConstrC 
@@ -389,7 +395,6 @@ ColumnConstrF ::= ON ColumnConstrG ColumnConstrF|;
 ColumnConstrG ::= DELETE ColumnConstrI|UPDATE ColumnConstrI;
 ColumnConstrH ::= NULL | DEFAULT;
 ColumnConstrI ::= CASCADE | SET ColumnConstrH;
-
 TableConstr ::= ColumnConstrA TableConstrA;
 TableConstrA ::= PRIMARY KEY ColumnConstrC TableConstrB
     | UNIQUE ColumnConstrC TableConstrB
@@ -399,7 +404,6 @@ TableConstrB ::= PARENTESIS_APERTURA ID OrderB TableConstrC PARENTESIS_CIERRE;
 TableConstrC ::= COMA ID OrderB TableConstrC |;
 TableConstrD ::= PARENTESIS_APERTURA ID TableConstrE PARENTESIS_CIERRE;
 TableConstrE ::= COMA ID TableConstrE |;
-
 TableIndex ::= INDEX ID ColumnConstrC TableConstrB;
 
 Alter ::= ALTER AlterA;
@@ -422,11 +426,12 @@ AlterTableDropA ::= AlterTableDropB IFE ID | COLUMN IFE ID;
 AlterTableDropB ::= CONSTRAINT |;
 AlterTableDropC ::= COMA AlterTableDropA AlterTableDropC |;
 
-BeginTran ::= BEGIN TranName BeginTranA;
+BeginTran ::= BEGIN TranName BeginTranA; //FinalTran;
 BeginTranA ::= Name BeginTranB |;
 BeginTranB ::= WITH MARK BeginTranC |;
-BeginTranC ::= CONSTANTE_CADENA|;
+BeginTranC ::=  CONSTANTE_CADENA |;
 
+FinalTran ::= Commit Final|Rollback Final;
 SavePoint ::= SAVE TranName Name;
 
 Name ::= ID | Variable;
@@ -434,24 +439,26 @@ NameA ::= ID | Variable |;
 
 TranName ::= TRAN | TRANSACTION;
 
-Commit ::= COMMIT CommitA;
+Commit ::= COMMIT CommitA CommitB;
 CommitA ::= TranName NameA |;
+CommitB ::= WITH PARENTESIS_APERTURA DELAYED_DURABILITY ASIGNACION OnOff PARENTESIS_CIERRE|;
+OnOff ::= ON | OFF;
 
 Rollback ::= ROLLBACK RollbackA;
 RollbackA ::= TranName NameA |;
 
 Procedure ::= OrAlter SP_Reservada Object2 NumSP ParamsSP ProcOption ReplicationSP AS StartSP;
 SP_Reservada ::=  PROC | PROCEDURE;
-NumSP ::= PYC INT |;
+NumSP ::= PYC CONSTANTE_ENTERA |;
 
 ParamsSP ::= ParamsA_SP |;
 ParamsA_SP ::= Variable TipoD_SP ParamsB_SP;
 ParamsB_SP ::= COMA ParamsA_SP |;
-
 TipoD_SP ::= Tipo_dato TipoD_SP1 TipoD_SP2
     | CURSOR VARYING TipoD_SP3
     | ID READONLY;
-TipoD_SP1 ::=ASIGNACION DEFAULT |;
+
+TipoD_SP1 ::= ASIGNACION DEFAULT |;
 TipoD_SP2 ::= TipoD_SP3 |;
 TipoD_SP3 ::= OUT | OUTPUT;
 
@@ -464,17 +471,10 @@ ProcOptionRec ::= COMA ProcOption1 |;
 Clause ::= CALLER | SELF | OWNER | ID;
 ReplicationSP ::= FOR REPLICATION |;
 StartSP ::= BEGIN StmtSP END;
-StmtSP ::= DML Final StmtSP1;
-StmtSP1 ::= DML Final StmtSP2 |;
-StmtSP2 ::= DML Final |;
 
-ExecProcedure ::= ClauseExec Object2 
-    | ClauseExec Object2 PARENTESIS_APERTURA RepeatProcedure PARENTESIS_CIERRE 
-    | ClauseExec Object2 RepeatProcedure;
-RepeatProcedure ::= Variable ASIGNACION Data_Type RepeatProcedureA 
-    | Data_Type RepeatProcedureA; 
-RepeatProcedureA ::= COMA RepeatProcedure |;
-Data_Type ::=  CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
+StmtSP ::= DML StmtSP1;
+StmtSP1 ::= DML StmtSP2 |;
+StmtSP2 ::= DML|;
 
 CursorDeclare ::= DECLARE ID CURSOR CursorDeclarea CursorDeclareb CursorDeclarec CursorDeclared CursorDeclaree FOR Select CursorDeclaref;
 CursorDeclarea ::= LOCAL|GLOBAL|;
@@ -485,25 +485,29 @@ CursorDeclaree ::= TYPE_WARNING|;
 CursorDeclaref ::= FOR UPDATE CursorDeclareg|;
 CursorDeclareg ::= OF ColumnListA|;
 
-Function  ::= OrAlter FUNCTION Object2 PARENTESIS_APERTURA Params PARENTESIS_CIERRE RETURNS Type_Return;
-Params ::= PARAM_A |;
+Function  ::= OrAlter FUNCTION Object2 PARENTESIS_APERTURA PARAMS PARENTESIS_CIERRE RETURNS Type_Return;
+PARAMS ::= PARAM_A |;
 OrAlter ::= OR ALTER|;
-
 Param ::= Variable As Tipo_datoA ReadOnly;
+As ::= AS|;
 PARAM_A ::= Param PARAM_B;
 PARAM_B ::= COMA PARAM_A|;
-
-As ::= AS |;
 ReadOnly ::= READONLY|;
 Type_Return ::= Data | Table;
-Data ::= Tipo_datoA With As BEGIN DML RETURN DType END;
+Data ::= Tipo_datoA With As BEGIN DML RETURN DTypes END;
 Table ::= TABLE With As RETURN SCT;
 SCT ::= PARENTESIS_APERTURA Select PARENTESIS_CIERRE | Select;
-DType ::= Variable | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE | CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
-With ::= WITH FuncOpc;
-
+DTypes ::= PARENTESIS_APERTURA DType PARENTESIS_CIERRE | DType;
+DType ::= Variable | CONSTANTE_ENTERA | CONSTANTE_FLOTANTE |  CONSTANTE_CADENA | CONSTANTE_BOOLEANA;
+    
+With ::= WITH FuncOpc|;
 FuncOpc ::= FuncOpcA FuncOpcB;
 FuncOpcA ::= ENCRYPTION  | SCHEMABINDING | RETURNS NULL ON NULL INPUT | CALLED ON NULL INPUT | EXECUTE_AS_CLAUSE | INLINE ASIGNACION FuncOpcC;
 FuncOpcB ::= COMA FuncOpc |;
 FuncOpcC ::= ON | OFF;
-EXECUTE_AS_Clause ::= ClauseExec AS Clause;
+
+EXECUTE_AS_CLAUSE ::= ClauseExec AS Clause;
+ExecProcedure ::= ClauseExec Object2 | ClauseExec Object2 PARENTESIS_APERTURA RepeatProcedure PARENTESIS_CIERRE | ClauseExec Object2 RepeatProcedure;
+RepeatProcedure ::= Variable ASIGNACION Data_Type RepeatProcedureA | Data_Type RepeatProcedureA; 
+RepeatProcedureA ::= COMA RepeatProcedure|;
+Data_Type ::=  CONSTANTE_ENTERA | CONSTANTE_FLOTANTE |  CONSTANTE_CADENA | CONSTANTE_BOOLEANA;

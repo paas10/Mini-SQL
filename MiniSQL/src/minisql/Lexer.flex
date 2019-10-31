@@ -368,6 +368,7 @@ public int columnf;
 "MAXSIZE" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MAXSIZE;}
 "UNLIMITED" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return UNLIMITED;}
 "FILEGROWTH" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return FILEGROWTH;}
+"DELAYED_DURABILITY" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return DELAYED_DURABILITY;}
 "KB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return KB;}
 "MB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return MB;}
 "GB" {lexeme = yytext(); line = yyline; columni = yycolumn; columnf = yycolumn + yylength() -1; return GB;}

@@ -393,6 +393,7 @@ public enum Token {
     MAXSIZE,
     UNLIMITED,
     FILEGROWTH,
+    DELAYED_DURABILITY,
     KB,
     MB,
     GB,
